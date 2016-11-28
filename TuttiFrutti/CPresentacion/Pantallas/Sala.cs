@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CPresentacion
+namespace CPresentacion.Pantallas
 {
-    public partial class PantallaInicio : Form
+    public partial class Sala : Form
     {
-        public PantallaInicio()
+        public Sala()
         {
             InitializeComponent();
         }
