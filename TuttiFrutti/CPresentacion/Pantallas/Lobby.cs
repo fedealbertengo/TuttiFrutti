@@ -78,7 +78,8 @@ namespace CPresentacion.Pantallas
             {
                 if(ex.Message.Contains("Usted ya se encuentra en la sala"))
                 {
-                    Sala sala = new Pantallas.Sala();
+                    int idJuego = (int)clog.getJuegos(dgvSalas.SelectedRows[0].Cells[1].Value.ToString(), dgvSalas.SelectedRows[0].Cells[0].Value.ToString(), false, false).Tables[0].Rows[0].ItemArray[0];
+                    Sala sala = new Pantallas.Sala(idJuego);
                     this.Hide();
                     sala.Show(this);
                 }

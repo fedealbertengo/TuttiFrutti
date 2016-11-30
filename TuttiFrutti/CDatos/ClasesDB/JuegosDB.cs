@@ -10,7 +10,7 @@ namespace CDatos.ClasesDB
 {
     public class JuegosDB
     {
-        string select = "SELECT J.Id, J.Nombre, U.NombreUsuario, J.Unidos, J.Capacidad FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id";
+        string select = "SELECT J.Id, J.Nombre, U.NombreUsuario, J.Unidos, J.Capacidad, J.Estado FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id";
         string orderBy = "ORDER BY J.Nombre ASC";
 
         public int obtenerUltimoIDBandera()
@@ -124,7 +124,7 @@ namespace CDatos.ClasesDB
 
                 int idUsuario = cdatosU.getIdUsuario(usuario);
 
-                string consulta = "INSERT INTO Juego VALUES (" + idJuego + ", \"" + nombre + "\", " + idUsuario + ", " + capacidad + ", 0)";
+                string consulta = "INSERT INTO Juego VALUES (" + idJuego + ", \"" + nombre + "\", " + idUsuario + ", " + capacidad + ", 0, \"Esperando\")";
 
                 OleDbCommand cmd = new OleDbCommand(consulta, con);
 
@@ -177,36 +177,79 @@ namespace CDatos.ClasesDB
             {
                 Conexion.conectar(con);
 
-                int idBandera = this.obtenerUltimoIDBandera();
-
-                string consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego +", \"" + usuario + "\", \"Esperando\")";
+                string consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE (NOT(J.Estado = \"Terminado\") AND BJ.NombreUsuario = \"" + usuario + "\" AND NOT(J.Id = " + idJuego + "))";
 
                 OleDbCommand cmd = new OleDbCommand(consulta, con);
 
-                cmd.ExecuteNonQuery();
-
-                //----------------------------------------------------------------------
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
 
                 DataSet ds = new DataSet();
-
-                consulta = "SELECT Unidos FROM Juego WHERE Id = " + idJuego;
-
-                cmd = new OleDbCommand(consulta, con);
-
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 
                 cmd.ExecuteNonQuery();
 
-                int unidos = (int) ds.Tables[0].Rows[0].ItemArray[0];
 
-                consulta = "UPDATE Juego SET Unidos = ( " + unidos + " + 1) WHERE Id = " + idJuego;
+                consulta = "SELECT * FROM Juego WHERE Estado = \"Esperando\" AND Id = " + idJuego + " AND (Capacidad - Unidos > 0)";
 
                 cmd = new OleDbCommand(consulta, con);
 
+                da = new OleDbDataAdapter(cmd);
+
+                DataSet ds2 = new DataSet();
+
+                da.Fill(ds2, "Juego");
+
                 cmd.ExecuteNonQuery();
 
+                //----------------------------------------------------------------------
+
+                if (ds.Tables[0].Rows.Count == 0 && ds2.Tables[0].Rows.Count == 1)
+                {
+                    int idBandera = this.obtenerUltimoIDBandera();
+
+                    consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego + ", \"" + usuario + "\", \"Esperando\")";
+
+                    cmd = new OleDbCommand(consulta, con);
+
+                    cmd.ExecuteNonQuery();
+
+                    //----------------------------------------------------------------------
+
+                    ds = new DataSet();
+
+                    consulta = "SELECT Unidos FROM Juego WHERE Id = " + idJuego;
+
+                    cmd = new OleDbCommand(consulta, con);
+
+                    da = new OleDbDataAdapter(cmd);
+
+                    da.Fill(ds, "Juego");
+
+                    cmd.ExecuteNonQuery();
+
+                    int unidos = (int)ds.Tables[0].Rows[0].ItemArray[0];
+
+                    consulta = "UPDATE Juego SET Unidos = ( " + unidos + " + 1) WHERE Id = " + idJuego;
+
+                    cmd = new OleDbCommand(consulta, con);
+
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    string str = "";
+                    if(ds.Tables[0].Rows.Count != 0)
+                    {
+                        str += "Usted ya se encuentra en una sala activa.\n";
+                    }
+                    if (ds.Tables[0].Rows.Count != 1)
+                    {
+                        str += "La sala a la que intenta unirse está llena o está en juego.\n";
+                    }
+                    str = str.Remove(str.LastIndexOf('\n'));
+                    throw new ExceptionPersonalizada(str);
+                }
             }
             catch (Exception e)
             {
@@ -240,7 +283,48 @@ namespace CDatos.ClasesDB
                 string consulta;
                 if (where != "")
                 {
-                    consulta = select + " " + where + " " + orderBy;
+                    consulta = select + " " + where + " AND NOT(Estado = \"Terminado\") " + orderBy;
+                }
+                else
+                {
+                    consulta = select + " " + orderBy;
+                }
+
+                OleDbCommand cmd = new OleDbCommand(consulta, con);
+
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds, "Juego");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                return ds;
+            }
+            catch (Exception e)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(e.Message);
+            }
+        }
+
+        public DataSet getBanderas(string where)
+        {
+            DataSet ds = new DataSet();
+            OleDbConnection con = Conexion.obtenerConexion();
+            try
+            {
+                Conexion.conectar(con);
+
+                string selectB = "SELECT * FROM BanderasJuego";
+
+                string consulta;
+                if (where != "")
+                {
+                    consulta = selectB + " " + where;
                 }
                 else
                 {

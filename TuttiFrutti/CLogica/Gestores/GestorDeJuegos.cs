@@ -59,118 +59,61 @@ namespace CLogica.Gestores
 
         }
 
-        public DataSet getJuegos(string prop, string nom, bool llenas, bool vacias)
+        public DataSet getJuegos(int idJuego)
         {
-            string where = "";
+            string where = "WHERE J.Id = " + idJuego;
             try
             {
                 JuegosDB cdatos = new JuegosDB();
-                if(prop == "")
-                {
-                    if(nom == "")
-                    {
-                        if (!llenas)
-                        {
-                            if (!vacias)
-                            {
-                                where = "";
-                            }
-                            else
-                            {
-                                where = "WHERE J.Unidos > 0";
-                            }
-                        }
-                        else
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                            else
-                            {
-                                where = "WHERE J.Unidos > 0 AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!llenas)
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE J.Nombre LIKE \"" + nom + "%\"";
-                            }
-                            else
-                            {
-                                where = "WHERE J.Nombre LIKE \"" + nom + "%\" AND J.Unidos > 0";
-                            }
-                        }
-                        else
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE J.Nombre LIKE \"" + nom + "%\" AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                            else
-                            {
-                                where = "WHERE J.Nombre LIKE \"" + nom + "%\" AND J.Unidos > 0 AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (nom == "")
-                    {
-                        if (!llenas)
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\"";
-                            }
-                            else
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND J.Unidos > 0";
-                            }
-                        }
-                        else
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                            else
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND J.Unidos > 0 AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!llenas)
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND J.Nombre LIKE \"" + nom + "%\"";
-                            }
-                            else
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND J.Nombre LIKE \"" + nom + "%\" AND J.Unidos > 0";
-                            }
-                        }
-                        else
-                        {
-                            if (!vacias)
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND J.Nombre LIKE \"" + nom + "%\" AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                            else
-                            {
-                                where = "WHERE U.NombreUsuario LIKE \"" + prop + "%\" AND J.Nombre LIKE \"" + nom + "%\" AND J.Unidos > 0 AND ((J.Capacidad - J.Unidos) > 0)";
-                            }
-                        }
-                    }
-                }
+                return cdatos.getJuegos(where);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public DataSet getBanderas(int idJuego)
+        {
+            string where = "WHERE IdJuego = " + idJuego;
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                return cdatos.getBanderas(where);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public DataSet getJuegos(string prop, string nom, bool llenas, bool vacias)
+        {
+            string where = "WHERE ";
+            if(prop != "")
+            {
+                where += "U.NombreUsuario LIKE \"" + prop + "%\" AND ";
+            }
+            if(nom != "")
+            {
+                where += "J.Nombre LIKE \"" + nom + "%\" AND ";
+            }
+            if (llenas)
+            {
+                where += "((J.Capacidad - J.Unidos) > 0) AND ";
+            }
+            if (vacias)
+            {
+                where += "J.Unidos > 0 AND ";
+            }
+            where = where.Remove((where.Length - 5), 5);
+            if (where.Equals("W"))
+            {
+                where = "";
+            }
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
                 return cdatos.getJuegos(where);
             }
             catch(Exception ex)
