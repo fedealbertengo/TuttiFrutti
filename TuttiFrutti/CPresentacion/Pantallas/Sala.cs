@@ -15,6 +15,7 @@ namespace CPresentacion.Pantallas
     {
 
         public int idJuego;
+        public bool empezar = true;
         public Sala()
         {
             InitializeComponent();
@@ -58,6 +59,7 @@ namespace CPresentacion.Pantallas
                     if (estado.Equals("Esperando"))
                     {
                         panUs.BackColor = Color.Blue;
+                        empezar = false;
                     }
                     else
                     {
@@ -73,6 +75,7 @@ namespace CPresentacion.Pantallas
                     if (estado.Equals("Esperando"))
                     {
                         panUs.BackColor = Color.Red;
+                        empezar = false;
                     }
                     else
                     {
@@ -106,11 +109,20 @@ namespace CPresentacion.Pantallas
             }
         }
 
+        public void empezarJuego()
+        {
+
+        }
+
         private void Sala_Load(object sender, EventArgs e)
         {
             try
             {
                 dibujarPraticipantes();
+                if (empezar)
+                {
+                    empezarJuego();
+                }
                 timer1.Enabled = true;
             }
             catch (Exception ex)
@@ -136,7 +148,7 @@ namespace CPresentacion.Pantallas
 
             DataTable jugadoresUnidos = clogJue.getBanderas(idJuego).Tables[0];
             int i = 0;
-            this.Controls.Remove(pnUs1);
+            empezar = true;
             foreach (DataRow dr in jugadoresUnidos.Rows)
             {
                 string usuario = dr.ItemArray[2].ToString();
@@ -146,10 +158,18 @@ namespace CPresentacion.Pantallas
                 Label lblNombre = (Label) panUs.Controls[1];
                 if (usuario.Equals(GestorDeUsuario.getUsuarioLogeado()))
                 {
+                    if (estado.Equals("Esperando"))
+                    {
+                        empezar = false;
+                    }
                     if (panUs.BackColor == Color.Yellow && estado.Equals("Esperando"))
                     {
                         panUs.BackColor = Color.Blue;
                         panUs.ForeColor = Color.White;
+                        if (empezar)
+                        {
+                            empezar = false;
+                        }
                     }
                     else
                     {
@@ -162,9 +182,17 @@ namespace CPresentacion.Pantallas
                 }
                 else
                 {
+                    if(estado == "Esperando")
+                    {
+                        empezar = false;
+                    }
                     if (panUs.BackColor == Color.Green && estado.Equals("Esperando"))
                     {
                         panUs.BackColor = Color.Red;
+                        if (empezar)
+                        {
+                            empezar = false;
+                        }
                     }
                     else
                     {
@@ -181,6 +209,10 @@ namespace CPresentacion.Pantallas
         private void timer1_Tick(object sender, EventArgs e)
         {
             dibujarParticipantes2();
+            if (empezar)
+            {
+                empezarJuego();
+            }
         }
     }
 }
