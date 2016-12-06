@@ -42,6 +42,22 @@ namespace CDatos.ClasesDB
             }
         }
 
+
+        public void cambiarEstado(string usuario, string estado)
+        {
+            try
+            {
+                OleDbConnection con = Conexion.obtenerConexion();
+                Conexion.conectar(con);
+                OleDbCommand cmd = new OleDbCommand("UPDATE BanderasJuego SET Bandera = \"" + estado + "\" WHERE NombreUsuario = \"" + usuario + "\"", con);
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
         public int obtenerUltimoId()
         {
             DataSet ds = new DataSet();

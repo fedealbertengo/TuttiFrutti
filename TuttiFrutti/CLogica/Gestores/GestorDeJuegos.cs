@@ -10,6 +10,20 @@ namespace CLogica.Gestores
 {
     public class GestorDeJuegos
     {
+
+        public void modificarEstado(int idJuego, string estado)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                cdatos.modificarEstado(idJuego, estado);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
         public void unirUsuarioAJuego(int idJuego)
         {
             try

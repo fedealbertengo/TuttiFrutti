@@ -70,6 +70,12 @@
     <Compile Include="Pantallas\PantallaInicio.Designer.cs">
       <DependentUpon>PantallaInicio.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pantallas\Planilla.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pantallas\Planilla.Designer.cs">
+      <DependentUpon>Planilla.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pantallas\Registrarse.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pantallas\PantallaInicio.resx">
       <DependentUpon>PantallaInicio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pantallas\Planilla.resx">
+      <DependentUpon>Planilla.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pantallas\Registrarse.resx">
       <DependentUpon>Registrarse.cs</DependentUpon>

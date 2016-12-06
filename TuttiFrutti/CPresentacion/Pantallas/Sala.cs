@@ -8,14 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CLogica.Gestores;
+using CPresentacion.Pantallas;
 
 namespace CPresentacion.Pantallas
 {
     public partial class Sala : Form
     {
-
+        public static int TAMMAXFILA = 4;
         public int idJuego;
-        public bool empezar = true;
+        public bool listo = true;
+        public bool empezar = false;
+        public bool oculto = false;
         public Sala()
         {
             InitializeComponent();
@@ -36,20 +39,24 @@ namespace CPresentacion.Pantallas
             int yant = 50;
             DataTable jugadoresUnidos = clogJue.getBanderas(idJuego).Tables[0];
             int i = 0;
+            int columnas = 0;
+            int filas = 0;
             this.Controls.Remove(pnUs1);
             foreach (DataRow dr in jugadoresUnidos.Rows)
             {
                 string usuario = dr.ItemArray[2].ToString();
                 string estado = dr.ItemArray[3].ToString();
                 Panel panUs = new Panel();
-                if ((xant + pnUs1.Size.Width + 50) + pnUs1.Size.Width >= 589)
+                if (columnas + 1 > TAMMAXFILA)
                 {
                     yant = yant + pnUs1.Size.Height + 50;
                     xant = 50;
+                    filas++;
                 }
                 else
                 {
                     xant = xant + pnUs1.Size.Width + 50;
+                    columnas++;
                 }
                 panUs.Location = new Point(xant, yant);
                 panUs.Font = pnUs1.Font;
@@ -58,13 +65,31 @@ namespace CPresentacion.Pantallas
                 {
                     if (estado.Equals("Esperando"))
                     {
+                        if (usuario.Equals(juego.Rows[0].ItemArray[2]))
+                        {
+                            botonUniversal.Text = "Empezar";
+                            empezar = false;
+                        }
+                        else
+                        {
+                            botonUniversal.Text = "Listo";
+                            listo = false;
+                        }
                         panUs.BackColor = Color.Blue;
-                        empezar = false;
                     }
                     else
                     {
                         if (estado.Equals("Listo"))
                         {
+                            if (usuario.Equals(juego.Rows[0].ItemArray[2]))
+                            {
+                                botonUniversal.Text = "Cancelar";
+                                empezar = true;
+                            }
+                            else
+                            {
+                                botonUniversal.Text = "No Listo";
+                            }
                             panUs.BackColor = Color.Yellow;
                             panUs.ForeColor = Color.Black;
                         }
@@ -74,13 +99,24 @@ namespace CPresentacion.Pantallas
                 {
                     if (estado.Equals("Esperando"))
                     {
+                        if (usuario.Equals(juego.Rows[0].ItemArray[2]))
+                        {
+                            empezar = false;
+                        }
+                        else
+                        {
+                            listo = false;
+                        }
                         panUs.BackColor = Color.Red;
-                        empezar = false;
                     }
                     else
                     {
                         if (estado.Equals("Listo"))
                         {
+                            if (usuario.Equals(juego.Rows[0].ItemArray[2]))
+                            {
+                                empezar = true;
+                            }
                             panUs.BackColor = Color.Green;
                         }
                     }
@@ -107,11 +143,59 @@ namespace CPresentacion.Pantallas
                 this.Controls.Add(panUs);
                 i++;
             }
+            if(filas == 0)
+            {
+                filas = 1;
+            }
+            this.Size = new Size((columnas * (pnUs1.Size.Width + 50)) + 50, (filas * (pnUs1.Size.Height + 50)) + 100);
+            botonUniversal.Location = new Point(((this.Size.Width / 2) - (botonUniversal.Size.Width / 2)), ((this.Size.Height) - (botonUniversal.Size.Height/2) - 25));
+            this.Size = new Size(this.Size.Width, this.Size.Height + 50);
+            if (!listo)
+            {
+                botonUniversal.Text = "No Listo";
+                botonUniversal.Enabled = false;
+            }
         }
 
         public void empezarJuego()
         {
+            GestorDeJuegos clogJue = new GestorDeJuegos();
+            DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
 
+            if (GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
+            {
+                if(listo && !empezar && !botonUniversal.Text.Equals("Empezar"))
+                {
+                    botonUniversal.Enabled = true;
+                    botonUniversal.Text = "Empezar";
+                }
+                else
+                {
+                    if (!listo && empezar)
+                    {
+                        botonUniversal.Enabled = false;
+                        botonUniversal.Text = "No Listo";
+                        empezar = false;
+                    }
+                }
+            }
+            else
+            {
+                if (listo && empezar && botonUniversal.Text.Equals("Empezar"))
+                {
+                    botonUniversal.Enabled = true;
+                    botonUniversal.Text = "Cancelar";
+                    empezar = false;
+                    listo = false;
+                }
+                else
+                {
+                    if (listo && empezar && botonUniversal.Enabled && !botonUniversal.Text.Equals("Cancelar"))
+                    {
+                        botonUniversal.Enabled = false;
+                    }
+                }
+            }
         }
 
         private void Sala_Load(object sender, EventArgs e)
@@ -119,10 +203,7 @@ namespace CPresentacion.Pantallas
             try
             {
                 dibujarPraticipantes();
-                if (empezar)
-                {
-                    empezarJuego();
-                }
+                empezarJuego();
                 timer1.Enabled = true;
             }
             catch (Exception ex)
@@ -141,34 +222,40 @@ namespace CPresentacion.Pantallas
 
         }
 
-        private void dibujarParticipantes2()
+        private void redibujarParticipantes()
         {
+
             GestorDeJuegos clogJue = new GestorDeJuegos();
             DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
 
             DataTable jugadoresUnidos = clogJue.getBanderas(idJuego).Tables[0];
             int i = 0;
-            empezar = true;
+            listo = true;
             foreach (DataRow dr in jugadoresUnidos.Rows)
             {
                 string usuario = dr.ItemArray[2].ToString();
                 string estado = dr.ItemArray[3].ToString();
-                Panel panUs = (Panel) this.Controls[i];
+                Panel panUs = (Panel) this.Controls[i+1];
                 Panel panFoto = (Panel) panUs.Controls[0];
                 Label lblNombre = (Label) panUs.Controls[1];
                 if (usuario.Equals(GestorDeUsuario.getUsuarioLogeado()))
                 {
-                    if (estado.Equals("Esperando"))
-                    {
-                        empezar = false;
-                    }
                     if (panUs.BackColor == Color.Yellow && estado.Equals("Esperando"))
                     {
                         panUs.BackColor = Color.Blue;
                         panUs.ForeColor = Color.White;
-                        if (empezar)
+                        if (usuario.Equals(juego.Rows[0].ItemArray[2]))
                         {
+                            botonUniversal.Text = "Empezar";
                             empezar = false;
+                        }
+                        else
+                        {
+                            if (listo)
+                            {
+                                botonUniversal.Text = "Listo";
+                                listo = false;
+                            }
                         }
                     }
                     else
@@ -177,21 +264,30 @@ namespace CPresentacion.Pantallas
                         {
                             panUs.BackColor = Color.Yellow;
                             panUs.ForeColor = Color.Black;
+                            if (usuario.Equals(juego.Rows[0].ItemArray[2]))
+                            {
+                                botonUniversal.Text = "Cancelar";
+                                empezar = true;
+                            }
+                            else
+                            {
+                                botonUniversal.Text = "No Listo";
+                                if (empezar)
+                                {
+                                    botonUniversal.Enabled = false;
+                                }
+                            }
                         }
                     }
                 }
                 else
                 {
-                    if(estado == "Esperando")
-                    {
-                        empezar = false;
-                    }
                     if (panUs.BackColor == Color.Green && estado.Equals("Esperando"))
                     {
                         panUs.BackColor = Color.Red;
-                        if (empezar)
+                        if (listo)
                         {
-                            empezar = false;
+                            listo = false;
                         }
                     }
                     else
@@ -208,10 +304,64 @@ namespace CPresentacion.Pantallas
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            dibujarParticipantes2();
-            if (empezar)
+            redibujarParticipantes();
+            empezarJuego();
+            if (empezar && listo)
             {
-                empezarJuego();
+                GestorDeJuegos clogJue = new GestorDeJuegos();
+                try
+                {
+                    clogJue.modificarEstado(idJuego, "Jugando");
+                    Planilla planilla = new Planilla();
+                    this.Hide();
+                    oculto = true;
+                    timer1.Enabled = false;
+                    botonUniversal.Enabled = false;
+                    planilla.Show(this);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void botonUniversal_Click(object sender, EventArgs e)
+        {
+            GestorDeUsuario clogUs = new GestorDeUsuario();
+            try
+            {
+                if(empezar && listo && botonUniversal.Text.Equals("Cancelar"))
+                {
+                    clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
+                    MessageBox.Show("El inicio ha sido cancelado.");
+                }
+                else
+                {
+                    if (botonUniversal.Text.Equals("Listo") || botonUniversal.Text.Equals("Empezar"))
+                    {
+                        clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Listo");
+                    }
+                    else
+                    {
+                        clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Sala_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible && oculto){
+                GestorDeJuegos clogJue = new GestorDeJuegos();
+                DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
+                if (juego.Rows[0].ItemArray[5].Equals("Jugando"))
+                {
+                    this.Close();
+                }
             }
         }
     }

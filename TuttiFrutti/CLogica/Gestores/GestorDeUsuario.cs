@@ -15,6 +15,20 @@ namespace CLogica.Gestores
         {
             return usuarioLogeado;
         }
+
+        public void cambiarEstado(string usuario, string estado)
+        {
+            UsuarioDB cdatos = new UsuarioDB();
+            try
+            {
+                cdatos.cambiarEstado(usuario, estado);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
         public void registrarUsuario(string nombre, string contraseña)
         {
             UsuarioDB cdatos = new UsuarioDB();

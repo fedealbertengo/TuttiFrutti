@@ -32,6 +32,7 @@
             this.pnFotoUs1 = new System.Windows.Forms.Panel();
             this.pnUs1 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.botonUniversal = new System.Windows.Forms.Button();
             this.pnUs1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,16 +65,28 @@
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // botonUniversal
+            // 
+            this.botonUniversal.Location = new System.Drawing.Point(272, 314);
+            this.botonUniversal.Name = "botonUniversal";
+            this.botonUniversal.Size = new System.Drawing.Size(75, 23);
+            this.botonUniversal.TabIndex = 2;
+            this.botonUniversal.Text = "button1";
+            this.botonUniversal.UseVisualStyleBackColor = true;
+            this.botonUniversal.Click += new System.EventHandler(this.botonUniversal_Click);
+            // 
             // Sala
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 405);
+            this.Controls.Add(this.botonUniversal);
             this.Controls.Add(this.pnUs1);
             this.Name = "Sala";
             this.Text = "Sala";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Sala_FormClosed);
             this.Load += new System.EventHandler(this.Sala_Load);
+            this.VisibleChanged += new System.EventHandler(this.Sala_VisibleChanged);
             this.pnUs1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -84,5 +97,6 @@
         private System.Windows.Forms.Panel pnFotoUs1;
         private System.Windows.Forms.Panel pnUs1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button botonUniversal;
     }
 }

@@ -13,6 +13,25 @@ namespace CDatos.ClasesDB
         string select = "SELECT J.Id, J.Nombre, U.NombreUsuario, J.Unidos, J.Capacidad, J.Estado FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id";
         string orderBy = "ORDER BY J.Nombre ASC";
 
+
+        public void modificarEstado(int idJuego, string estado)
+        {
+            OleDbConnection con = Conexion.obtenerConexion();
+            try
+            {
+                Conexion.conectar(con);
+
+                OleDbCommand cmd = new OleDbCommand("UPDATE Juego SET Estado = \"" + estado + "\" WHERE Id = " + idJuego, con);
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+
         public int obtenerUltimoIDBandera()
         {
             DataSet ds = new DataSet();
@@ -202,9 +221,22 @@ namespace CDatos.ClasesDB
 
                 cmd.ExecuteNonQuery();
 
+
+                consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = \"Jugando\" AND BJ.NombreUsuario = \"" + usuario + "\" AND J.Id = " + idJuego;
+
+                cmd = new OleDbCommand(consulta, con);
+
+                da = new OleDbDataAdapter(cmd);
+
+                DataSet ds3 = new DataSet();
+
+                da.Fill(ds3, "Juego");
+
+                cmd.ExecuteNonQuery();
+
                 //----------------------------------------------------------------------
 
-                if (ds.Tables[0].Rows.Count == 0 && ds2.Tables[0].Rows.Count == 1)
+                if (ds.Tables[0].Rows.Count == 0 && (ds2.Tables[0].Rows.Count == 1 || ds3.Tables[0].Rows.Count == 1))
                 {
                     int idBandera = this.obtenerUltimoIDBandera();
 
@@ -254,7 +286,7 @@ namespace CDatos.ClasesDB
             catch (Exception e)
             {
                 string message;
-                if (e.Message.Contains("create duplicate values"))
+                if (e.Message.Contains("create duplicate values") || e.Message.Contains("crearían valores duplicados"))
                 {
                     message = "Usted ya se encuentra en la sala.";
                 }
