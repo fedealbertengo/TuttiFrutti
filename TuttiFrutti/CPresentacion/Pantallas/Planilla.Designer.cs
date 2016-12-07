@@ -108,6 +108,7 @@
             // 
             // tbDeporte
             // 
+            this.tbDeporte.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbDeporte.Location = new System.Drawing.Point(108, 242);
             this.tbDeporte.Name = "tbDeporte";
             this.tbDeporte.Size = new System.Drawing.Size(431, 26);
@@ -124,6 +125,7 @@
             // 
             // tbComida
             // 
+            this.tbComida.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbComida.Location = new System.Drawing.Point(108, 210);
             this.tbComida.Name = "tbComida";
             this.tbComida.Size = new System.Drawing.Size(431, 26);
@@ -140,6 +142,7 @@
             // 
             // tbLugar
             // 
+            this.tbLugar.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbLugar.Location = new System.Drawing.Point(108, 178);
             this.tbLugar.Name = "tbLugar";
             this.tbLugar.Size = new System.Drawing.Size(431, 26);
@@ -156,6 +159,7 @@
             // 
             // tbObjeto
             // 
+            this.tbObjeto.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbObjeto.Location = new System.Drawing.Point(108, 146);
             this.tbObjeto.Name = "tbObjeto";
             this.tbObjeto.Size = new System.Drawing.Size(431, 26);
@@ -172,6 +176,7 @@
             // 
             // tbRopa
             // 
+            this.tbRopa.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbRopa.Location = new System.Drawing.Point(108, 114);
             this.tbRopa.Name = "tbRopa";
             this.tbRopa.Size = new System.Drawing.Size(431, 26);
@@ -188,6 +193,7 @@
             // 
             // tbColor
             // 
+            this.tbColor.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbColor.Location = new System.Drawing.Point(108, 82);
             this.tbColor.Name = "tbColor";
             this.tbColor.Size = new System.Drawing.Size(431, 26);
@@ -204,6 +210,7 @@
             // 
             // tbAnimal
             // 
+            this.tbAnimal.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbAnimal.Location = new System.Drawing.Point(108, 50);
             this.tbAnimal.Name = "tbAnimal";
             this.tbAnimal.Size = new System.Drawing.Size(431, 26);
@@ -220,6 +227,7 @@
             // 
             // tbNombre
             // 
+            this.tbNombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbNombre.Location = new System.Drawing.Point(108, 18);
             this.tbNombre.Name = "tbNombre";
             this.tbNombre.Size = new System.Drawing.Size(431, 26);

@@ -38,55 +38,103 @@ namespace CPresentacion.Pantallas
 
         private void Planilla_Load(object sender, EventArgs e)
         {
-            empezar = 3000;
             GestorDeJuegos clogJue = new GestorDeJuegos();
-            nroRonda = clogJue.obtenerNroRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego);
-            clogJue.crearRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0]);
+            try
+            {
+                Random rnd = new Random();
+                char letra = (char)((rnd.Next() % 26) + 65);
+                lblLetra.Text = letra.ToString();
+                nroRonda = clogJue.obtenerNroRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego);
+                clogJue.crearRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0]);
+                btnTuttiFrutti.Enabled = false;
+                tbNombre.Enabled = false;
+                tbAnimal.Enabled = false;
+                tbColor.Enabled = false;
+                tbComida.Enabled = false;
+                tbLugar.Enabled = false;
+                tbDeporte.Enabled = false;
+                tbObjeto.Enabled = false;
+                tbRopa.Enabled = false;
+                empezar = 300;
+                timer.Enabled = true;
+            }
+            catch(Exception ex){
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
             GestorDeJuegos clogJue = new GestorDeJuegos();
-            if(empezar == 0)
+            try
             {
-                if (clogJue.hayTuttiFrutti(idJuego, nroRonda))
+                if (empezar == 0)
                 {
-                    terminar = 3000;
-                    btnTuttiFrutti.Enabled = false;
-                    if (!tuttiFrutti)
+                    if (clogJue.hayTuttiFrutti(idJuego, nroRonda))
                     {
-                        clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, false);
-                        nroRonda++;
-                    }
-                    else
-                    {
-                        tuttiFrutti = false;
+                        terminar = 300;
+                        btnTuttiFrutti.Enabled = false;
+                        if (!tuttiFrutti)
+                        {
+                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, false);
+                            nroRonda++;
+                        }
+                        else
+                        {
+                            tuttiFrutti = false;
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (empezar - 1 == 0)
+                else
                 {
-                    btnTuttiFrutti.Enabled = true;
+                    if (empezar - 1 == 0)
+                    {
+                        btnTuttiFrutti.Enabled = true;
+                        tbNombre.Enabled = true;
+                        tbAnimal.Enabled = true;
+                        tbColor.Enabled = true;
+                        tbComida.Enabled = true;
+                        tbLugar.Enabled = true;
+                        tbDeporte.Enabled = true;
+                        tbObjeto.Enabled = true;
+                        tbRopa.Enabled = true;
+                    }
+                    empezar--;
                 }
-                empezar--;
+                if (terminar == 0)
+                {
+                    this.Close();
+                }
+                else
+                {
+                    terminar--;
+                }
             }
-            if(terminar == 0)
+            catch(Exception ex)
             {
-                this.Close();
-            }
-            else
-            {
-                terminar--;
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnTuttiFrutti_Click(object sender, EventArgs e)
         {
             GestorDeJuegos clogJue = new GestorDeJuegos();
-            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado, idJuego, nroRonda, lblLetra.Text, tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, true);
-            tuttiFrutti = true;
+            try
+            {
+                if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbRopa.Text != "" && tbDeporte.Text != "" && tbComida.Text != "")
+                {
+                    clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, true);
+                    tuttiFrutti = true;
+                }
+                else
+                {
+                    MessageBox.Show(("Debe completar todos los campos."), "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

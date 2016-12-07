@@ -23,7 +23,7 @@ namespace CDatos.ClasesDB
 
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("SELECT Max(NroRonda) FROM Ronda WHERE IdJuego = " + juego + " AND Jugador = \"" + usuario + "\" AND TuttiFrutti = 0", con);
+                OleDbCommand cmd = new OleDbCommand("SELECT IIF(ISNULL(MAX(NroRonda)), 0, MAX(NroRonda)) FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 0", con);
 
                 OleDbDataAdapter da = new OleDbDataAdapter(cmd);
 
@@ -31,8 +31,9 @@ namespace CDatos.ClasesDB
 
                 cmd.ExecuteNonQuery();
 
-                return ((int)ds.Tables[0].Rows[0].ItemArray[2] + 1);
+                int nroRonda = ((int)ds.Tables[0].Rows[0].ItemArray[0] + 1);
 
+                return nroRonda;
             }
             catch (Exception ex)
             {
@@ -42,12 +43,25 @@ namespace CDatos.ClasesDB
 
         public void crearRonda(string datos)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
             try
             {
+
+                DataSet ds = new DataSet();
+                OleDbConnection con = Conexion.obtenerConexion();
+
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("INSERT INTO Ronda VALUES " + datos, con);
+                OleDbCommand cmd = new OleDbCommand("SELECT IIF(ISNULL(MAX(IdRespuesta)), 0, MAX(IdRespuesta)) FROM Ronda", con);
+
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                int nroRespuesta = ((int)ds.Tables[0].Rows[0].ItemArray[0] + 1);
+
+                cmd = new OleDbCommand("INSERT INTO Ronda VALUES (" +  nroRespuesta + ",  \"" + datos, con);
 
                 cmd.ExecuteNonQuery();
             }
