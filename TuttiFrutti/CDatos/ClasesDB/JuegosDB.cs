@@ -14,6 +14,93 @@ namespace CDatos.ClasesDB
         string orderBy = "ORDER BY J.Nombre ASC";
 
 
+        public int obtenerNroRonda(string usuario, int juego)
+        {
+            try
+            {
+                DataSet ds = new DataSet();
+                OleDbConnection con = Conexion.obtenerConexion();
+
+                Conexion.conectar(con);
+
+                OleDbCommand cmd = new OleDbCommand("SELECT Max(NroRonda) FROM Ronda WHERE IdJuego = " + juego + " AND Jugador = \"" + usuario + "\" AND TuttiFrutti = 0", con);
+
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                return ((int)ds.Tables[0].Rows[0].ItemArray[2] + 1);
+
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public void crearRonda(string datos)
+        {
+            OleDbConnection con = Conexion.obtenerConexion();
+            try
+            {
+                Conexion.conectar(con);
+
+                OleDbCommand cmd = new OleDbCommand("INSERT INTO Ronda VALUES " + datos, con);
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public void cargarRonda(string datos, string where)
+        {
+            OleDbConnection con = Conexion.obtenerConexion();
+            try
+            {
+                Conexion.conectar(con);
+
+                OleDbCommand cmd = new OleDbCommand("UPDATE Ronda SET " + datos + " " + where, con);
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public bool hayTuttiFrutti(int juego, int ronda)
+        {
+            try
+            {
+                DataSet ds = new DataSet();
+                OleDbConnection con = Conexion.obtenerConexion();
+
+                Conexion.conectar(con);
+
+                OleDbCommand cmd = new OleDbCommand("SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
+
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                return (ds.Tables[0].Rows.Count > 0);
+
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+
         public void modificarEstado(int idJuego, string estado)
         {
             OleDbConnection con = Conexion.obtenerConexion();

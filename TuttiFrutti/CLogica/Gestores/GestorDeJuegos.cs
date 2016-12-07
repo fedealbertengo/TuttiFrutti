@@ -10,6 +10,93 @@ namespace CLogica.Gestores
 {
     public class GestorDeJuegos
     {
+        public int obtenerNroRonda(string usuario, int idJuego)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                return cdatos.obtenerNroRonda(usuario, idJuego);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public void crearRonda(string usuario, int idJuego, int nroRonda, char letra)
+        {
+            try
+            {
+                string datos = "(\"" + usuario + "\", " + idJuego + ", " + nroRonda + ", \"" + letra + "\", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0)";
+                JuegosDB cdatos = new JuegosDB();
+                cdatos.crearRonda(datos);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+        public void cargarRonda(string usuario, int idJuego, int nroRonda, char letra, string nombre, string animal, string color, string ropa, string objeto, string lugar, string comida, string deporte, bool tuttifrutti)
+        {
+            try
+            {
+                string datos = "";
+                if(nombre != "")
+                {
+                    datos += "Nombre = \"" + nombre + "\",";
+                }
+                if(animal != "")
+                {
+                    datos += "Animal = \"" + animal + "\",";
+                }
+                if (color != "")
+                {
+                    datos += "Color = \"" + color + "\",";
+                }
+                if (ropa != "")
+                {
+                    datos += "Ropa = \"" + ropa + "\",";
+                }
+                if (objeto != "")
+                {
+                    datos += "Objeto = \"" + objeto + "\",";
+                }
+                if (lugar != "")
+                {
+                    datos += "Lugar = \"" + lugar + "\",";
+                }
+                if (comida != "")
+                {
+                    datos += "Comida = \"" + comida + "\",";
+                }
+                if (deporte != "")
+                {
+                    datos += "Deporte = \"" + deporte + "\",";
+                }
+                datos.Remove(datos.LastIndexOf(','));
+                string where = "Jugador = \"" + usuario + "\" AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
+                JuegosDB cdatos = new JuegosDB();
+                cdatos.cargarRonda(datos, where);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+
+        }
+
+        public bool hayTuttiFrutti(int juego, int ronda)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                return cdatos.hayTuttiFrutti(juego, ronda);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
 
         public void modificarEstado(int idJuego, string estado)
         {

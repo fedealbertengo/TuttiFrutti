@@ -312,7 +312,7 @@ namespace CPresentacion.Pantallas
                 try
                 {
                     clogJue.modificarEstado(idJuego, "Jugando");
-                    Planilla planilla = new Planilla();
+                    Planilla planilla = new Planilla(idJuego);
                     this.Hide();
                     oculto = true;
                     timer1.Enabled = false;
