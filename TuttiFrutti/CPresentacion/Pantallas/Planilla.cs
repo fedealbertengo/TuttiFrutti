@@ -72,8 +72,18 @@ namespace CPresentacion.Pantallas
                 {
                     if (clogJue.hayTuttiFrutti(idJuego, nroRonda))
                     {
+                        timer.Enabled = false;
                         terminar = 300;
+                        timer1.Enabled = true;
                         btnTuttiFrutti.Enabled = false;
+                        tbNombre.Enabled = false;
+                        tbAnimal.Enabled = false;
+                        tbColor.Enabled = false;
+                        tbComida.Enabled = false;
+                        tbLugar.Enabled = false;
+                        tbDeporte.Enabled = false;
+                        tbObjeto.Enabled = false;
+                        tbRopa.Enabled = false;
                         if (!tuttiFrutti)
                         {
                             clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, false);
@@ -101,14 +111,6 @@ namespace CPresentacion.Pantallas
                     }
                     empezar--;
                 }
-                if (terminar == 0)
-                {
-                    this.Close();
-                }
-                else
-                {
-                    terminar--;
-                }
             }
             catch(Exception ex)
             {
@@ -123,8 +125,20 @@ namespace CPresentacion.Pantallas
             {
                 if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbRopa.Text != "" && tbDeporte.Text != "" && tbComida.Text != "")
                 {
+                    timer.Enabled = false;
+                    terminar = 300;
+                    timer1.Enabled = true;
                     clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, true);
                     tuttiFrutti = true;
+                    btnTuttiFrutti.Enabled = false;
+                    tbNombre.Enabled = false;
+                    tbAnimal.Enabled = false;
+                    tbColor.Enabled = false;
+                    tbComida.Enabled = false;
+                    tbLugar.Enabled = false;
+                    tbDeporte.Enabled = false;
+                    tbObjeto.Enabled = false;
+                    tbRopa.Enabled = false;
                 }
                 else
                 {
@@ -134,6 +148,19 @@ namespace CPresentacion.Pantallas
             catch(Exception ex)
             {
                 MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (terminar == 0)
+            {
+                timer1.Enabled = false;
+                this.Close();
+            }
+            else
+            {
+                terminar--;
             }
         }
     }

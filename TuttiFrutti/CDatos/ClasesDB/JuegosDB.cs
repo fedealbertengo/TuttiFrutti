@@ -16,14 +16,14 @@ namespace CDatos.ClasesDB
 
         public int obtenerNroRonda(string usuario, int juego)
         {
+            OleDbConnection con = Conexion.obtenerConexion();
+
             try
             {
                 DataSet ds = new DataSet();
-                OleDbConnection con = Conexion.obtenerConexion();
-
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("SELECT IIF(ISNULL(MAX(NroRonda)), 0, MAX(NroRonda)) FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 0", con);
+                OleDbCommand cmd = new OleDbCommand("SELECT IIF(ISNULL(MAX(NroRonda)),0,MAX(NroRonda)), IIF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
 
                 OleDbDataAdapter da = new OleDbDataAdapter(cmd);
 
@@ -31,23 +31,35 @@ namespace CDatos.ClasesDB
 
                 cmd.ExecuteNonQuery();
 
-                int nroRonda = ((int)ds.Tables[0].Rows[0].ItemArray[0] + 1);
+                int nroRonda;
+                if ((int)ds.Tables[0].Rows[0].ItemArray[1] == 1) {
+                    nroRonda = ((int)ds.Tables[0].Rows[0].ItemArray[0] + 1);
+                }
+                else
+                {
+                    nroRonda = (int)ds.Tables[0].Rows[0].ItemArray[0];
+                }
 
+                con.Dispose();
+                con.Close();
                 return nroRonda;
             }
             catch (Exception ex)
             {
+                con.Dispose();
+                con.Close();
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
 
         public void crearRonda(string datos)
         {
+            OleDbConnection con = Conexion.obtenerConexion();
+
             try
             {
 
                 DataSet ds = new DataSet();
-                OleDbConnection con = Conexion.obtenerConexion();
 
                 Conexion.conectar(con);
 
@@ -64,9 +76,13 @@ namespace CDatos.ClasesDB
                 cmd = new OleDbCommand("INSERT INTO Ronda VALUES (" +  nroRespuesta + ",  \"" + datos, con);
 
                 cmd.ExecuteNonQuery();
+                con.Dispose();
+                con.Close();
             }
             catch (Exception ex)
             {
+                con.Dispose();
+                con.Close();
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
@@ -81,20 +97,25 @@ namespace CDatos.ClasesDB
                 OleDbCommand cmd = new OleDbCommand("UPDATE Ronda SET " + datos + " " + where, con);
 
                 cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
             }
             catch (Exception ex)
             {
+                con.Dispose();
+                con.Close();
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
 
         public bool hayTuttiFrutti(int juego, int ronda)
         {
+            OleDbConnection con = Conexion.obtenerConexion();
+
             try
             {
                 DataSet ds = new DataSet();
-                OleDbConnection con = Conexion.obtenerConexion();
-
                 Conexion.conectar(con);
 
                 OleDbCommand cmd = new OleDbCommand("SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
@@ -105,11 +126,16 @@ namespace CDatos.ClasesDB
 
                 cmd.ExecuteNonQuery();
 
-                return (ds.Tables[0].Rows.Count > 0);
 
+                con.Dispose();
+                con.Close();
+
+                return (ds.Tables[0].Rows.Count > 0);
             }
             catch (Exception ex)
             {
+                con.Dispose();
+                con.Close();
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }

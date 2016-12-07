@@ -45,15 +45,19 @@ namespace CDatos.ClasesDB
 
         public void cambiarEstado(string usuario, string estado)
         {
+            OleDbConnection con = Conexion.obtenerConexion();
             try
             {
-                OleDbConnection con = Conexion.obtenerConexion();
                 Conexion.conectar(con);
                 OleDbCommand cmd = new OleDbCommand("UPDATE BanderasJuego SET Bandera = \"" + estado + "\" WHERE NombreUsuario = \"" + usuario + "\"", con);
                 cmd.ExecuteNonQuery();
+                con.Dispose();
+                con.Close();
             }
             catch(Exception ex)
             {
+                con.Dispose();
+                con.Close();
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
@@ -110,9 +114,13 @@ namespace CDatos.ClasesDB
                 OleDbCommand cmd = new OleDbCommand(strConsulta, con);
 
                 cmd.ExecuteNonQuery();
+                con.Dispose();
+                con.Close();
             }
             catch (Exception e)
             {
+                con.Dispose();
+                con.Close();
                 string message;
                 if (e.Message.Contains("create duplicate values"))
                 {
@@ -151,9 +159,13 @@ namespace CDatos.ClasesDB
                 {
                     throw new ExceptionPersonalizada("Error, los datos no son correctos.");
                 }
+                con.Dispose();
+                con.Close();
             }
             catch (Exception e)
             {
+                con.Dispose();
+                con.Close();
                 string message = e.Message;
                 throw new ExceptionPersonalizada(message);
             }

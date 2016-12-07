@@ -40,6 +40,7 @@ namespace CLogica.Gestores
         {
             try
             {
+                //string datos = "Jugador = \"" + usuario + "\",";
                 string datos = "";
                 if(nombre != "")
                 {
@@ -73,10 +74,17 @@ namespace CLogica.Gestores
                 {
                     datos += "Deporte = \"" + deporte + "\",";
                 }
-                datos.Remove(datos.LastIndexOf(','));
-                string where = "Jugador = \"" + usuario + "\" AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
-                JuegosDB cdatos = new JuegosDB();
-                cdatos.cargarRonda(datos, where);
+                if (tuttifrutti)
+                {
+                    datos += "TuttiFrutti = 1,";
+                }
+                if(datos != "")
+                {
+                    datos = datos.Remove(datos.LastIndexOf(','));
+                    string where = "WHERE Jugador = \"" + usuario + "\" AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
+                    JuegosDB cdatos = new JuegosDB();
+                    cdatos.cargarRonda(datos, where);
+                }
             }
             catch (Exception ex)
             {

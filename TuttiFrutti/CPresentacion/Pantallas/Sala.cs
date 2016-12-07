@@ -355,13 +355,12 @@ namespace CPresentacion.Pantallas
 
         private void Sala_VisibleChanged(object sender, EventArgs e)
         {
-            if (this.Visible && oculto){
-                GestorDeJuegos clogJue = new GestorDeJuegos();
-                DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
-                if (juego.Rows[0].ItemArray[5].Equals("Jugando"))
-                {
-                    this.Close();
-                }
+            if (this.Visible && oculto)
+            {
+                GestorDeUsuario clogUs = new GestorDeUsuario();
+                clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
+                timer1.Enabled = true;
+                botonUniversal.Enabled = true;
             }
         }
     }
