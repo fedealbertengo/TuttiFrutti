@@ -52,9 +52,7 @@ namespace CPresentacion.Pantallas
                 tbColor.Enabled = false;
                 tbComida.Enabled = false;
                 tbLugar.Enabled = false;
-                tbDeporte.Enabled = false;
                 tbObjeto.Enabled = false;
-                tbRopa.Enabled = false;
                 empezar = 300;
                 timer.Enabled = true;
             }
@@ -81,12 +79,10 @@ namespace CPresentacion.Pantallas
                         tbColor.Enabled = false;
                         tbComida.Enabled = false;
                         tbLugar.Enabled = false;
-                        tbDeporte.Enabled = false;
                         tbObjeto.Enabled = false;
-                        tbRopa.Enabled = false;
                         if (!tuttiFrutti)
                         {
-                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, false);
+                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, false);
                             nroRonda++;
                         }
                         else
@@ -105,9 +101,7 @@ namespace CPresentacion.Pantallas
                         tbColor.Enabled = true;
                         tbComida.Enabled = true;
                         tbLugar.Enabled = true;
-                        tbDeporte.Enabled = true;
                         tbObjeto.Enabled = true;
-                        tbRopa.Enabled = true;
                     }
                     empezar--;
                 }
@@ -123,12 +117,12 @@ namespace CPresentacion.Pantallas
             GestorDeJuegos clogJue = new GestorDeJuegos();
             try
             {
-                if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbRopa.Text != "" && tbDeporte.Text != "" && tbComida.Text != "")
+                if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbComida.Text != "")
                 {
                     timer.Enabled = false;
                     terminar = 300;
                     timer1.Enabled = true;
-                    clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbRopa.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tbDeporte.Text, true);
+                    clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, true);
                     tuttiFrutti = true;
                     btnTuttiFrutti.Enabled = false;
                     tbNombre.Enabled = false;
@@ -136,9 +130,7 @@ namespace CPresentacion.Pantallas
                     tbColor.Enabled = false;
                     tbComida.Enabled = false;
                     tbLugar.Enabled = false;
-                    tbDeporte.Enabled = false;
                     tbObjeto.Enabled = false;
-                    tbRopa.Enabled = false;
                 }
                 else
                 {
@@ -160,7 +152,17 @@ namespace CPresentacion.Pantallas
             }
             else
             {
-                terminar--;
+                if (terminar == 200)
+                {
+                    terminar--;
+                    GestorDeJuegos clogJue = new GestorDeJuegos();
+                    int puntaje = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
+                    MessageBox.Show("Felicitaicones, su puntaje fue: " + puntaje, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    terminar--;
+                }
             }
         }
     }

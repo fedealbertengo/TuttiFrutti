@@ -13,7 +13,139 @@ namespace CDatos.ClasesDB
         string select = "SELECT J.Id, J.Nombre, U.NombreUsuario, J.Unidos, J.Capacidad, J.Estado FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id";
         string orderBy = "ORDER BY J.Nombre ASC";
 
+        public void actualizarPuntajeRonda(int idJuego, int nroRonda, string usuario, int puntaje)
+        {
+            OleDbConnection con = Conexion.obtenerConexion();
+            try
+            {
+                Conexion.conectar(con);
 
+                OleDbCommand cmd = new OleDbCommand("UPDATE Ronda SET Puntos = " + puntaje + " WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+
+        }
+
+        public int obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
+        {
+            OleDbConnection con = Conexion.obtenerConexion();
+
+            try
+            {
+                int puntos = 10;
+
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                string where = "";
+                if (categoria.Equals("Objeto"))
+                {
+                    where = "WHERE Palabra = \"" + palabra + "\" AND Letra = \"" + letra + "\"";
+                }
+                else
+                {
+                    where = "WHERE Palabra = \"" + palabra + "\" AND Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"";
+                }
+
+                OleDbCommand cmd = new OleDbCommand("SELECT * FROM Palabras " + where, con);
+
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                DataSet ds1 = new DataSet();
+
+                cmd = new OleDbCommand("SELECT * FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND " + categoria + " = \"" + palabra + "\" AND NOT(Jugador = \"" + usuario + "\")", con);
+
+                da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds1, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                DataSet ds2 = new DataSet();
+
+                cmd = new OleDbCommand("SELECT * FROM Palabras WHERE Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"", con);
+
+                da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds2, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                if(ds.Tables[0].Rows.Count == 0 && ds2.Tables[0].Rows.Count > 0)
+                {
+                    puntos = -10;
+                }
+                else
+                {
+                    if (ds1.Tables[0].Rows.Count > 0)
+                    {
+                        puntos = 5;
+                    }
+                }
+
+                return puntos;
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public List<string> obtenerDatosRonda(int idJuego, int nroRonda, string usuario)
+        {
+            OleDbConnection con = Conexion.obtenerConexion();
+
+            try
+            {
+                List<string> lista = new List<string>();
+
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                OleDbCommand cmd = new OleDbCommand("SELECT Letra, Nombre, Animal, Color, Objeto, Lugar, Comida FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
+
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                foreach (var item in ds.Tables[0].Rows[0].ItemArray)
+                {
+                    lista.Add(item.ToString());
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
         public int obtenerNroRonda(string usuario, int juego)
         {
             OleDbConnection con = Conexion.obtenerConexion();

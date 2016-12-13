@@ -61,6 +61,7 @@
             this.Controls.Add(this.btnIniciarSesion);
             this.Name = "PantallaInicio";
             this.Text = "Inicio";
+            this.Load += new System.EventHandler(this.PantallaInicio_Load);
             this.ResumeLayout(false);
 
         }

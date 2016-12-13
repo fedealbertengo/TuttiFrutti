@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClasesDB\JuegosDB.cs" />
+    <Compile Include="ClasesDB\PalabraDB.cs" />
     <Compile Include="ClasesDB\UsuarioDB.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="ExceptionPersonalizada.cs" />

@@ -10,6 +10,49 @@ namespace CLogica.Gestores
 {
     public class GestorDeJuegos
     {
+
+        public int calcularPuntaje(int idJuego, int nroRonda, string usuario)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                List<string> ronda = cdatos.obtenerDatosRonda(idJuego, nroRonda, usuario);
+                char letra = ronda[0][0];
+                int puntaje = 0;
+                for(int i = 1; i<ronda.Count(); i++)
+                {
+                    string categoria = "";
+                    switch (i)
+                    {
+                        case 1:
+                            categoria = "Nombre";
+                            break;
+                        case 2:
+                            categoria = "Animal";
+                            break;
+                        case 3:
+                            categoria = "Color";
+                            break;
+                        case 4:
+                            categoria = "Objeto";
+                            break;
+                        case 5:
+                            categoria = "Lugar";
+                            break;
+                        case 6:
+                            categoria = "Comida";
+                            break;
+                    }
+                    puntaje += cdatos.obtenerPuntosPalabra(idJuego, nroRonda, usuario, letra, ronda[i], categoria);
+                }
+                cdatos.actualizarPuntajeRonda(idJuego, nroRonda, usuario, puntaje);
+                return puntaje;
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
         public int obtenerNroRonda(string usuario, int idJuego)
         {
             try
@@ -36,7 +79,7 @@ namespace CLogica.Gestores
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
-        public void cargarRonda(string usuario, int idJuego, int nroRonda, char letra, string nombre, string animal, string color, string ropa, string objeto, string lugar, string comida, string deporte, bool tuttifrutti)
+        public void cargarRonda(string usuario, int idJuego, int nroRonda, char letra, string nombre, string animal, string color, string objeto, string lugar, string comida, bool tuttifrutti)
         {
             try
             {
@@ -54,10 +97,6 @@ namespace CLogica.Gestores
                 {
                     datos += "Color = \"" + color + "\",";
                 }
-                if (ropa != "")
-                {
-                    datos += "Ropa = \"" + ropa + "\",";
-                }
                 if (objeto != "")
                 {
                     datos += "Objeto = \"" + objeto + "\",";
@@ -69,10 +108,6 @@ namespace CLogica.Gestores
                 if (comida != "")
                 {
                     datos += "Comida = \"" + comida + "\",";
-                }
-                if (deporte != "")
-                {
-                    datos += "Deporte = \"" + deporte + "\",";
                 }
                 if (tuttifrutti)
                 {
