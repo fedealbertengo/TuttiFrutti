@@ -45,6 +45,7 @@ namespace CPresentacion.Pantallas
             foreach (DataRow dr in jugadoresUnidos.Rows)
             {
                 string usuario = dr.ItemArray[2].ToString();
+                Image imagen = GestorDeImagen.Convertir_Bytes_Imagen((byte[])dr.ItemArray[4]);
                 string estado = dr.ItemArray[3].ToString();
                 Panel panUs = new Panel();
                 if (columnas + 1 > TAMMAXFILA)
@@ -130,7 +131,7 @@ namespace CPresentacion.Pantallas
                 panFoto.Size = pnFotoUs1.Size;
                 panFoto.Name = ("pnFotoUs" + (i + 1).ToString());
                 panFoto.BackColor = Color.Gray;
-                panFoto.BackgroundImage = CPresentacion.Properties.Resources.Foto1;
+                panFoto.BackgroundImage = imagen;
                 panFoto.BackgroundImageLayout = ImageLayout.Stretch;
 
                 Label lblNombre = new Label();

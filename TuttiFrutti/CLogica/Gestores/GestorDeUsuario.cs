@@ -29,14 +29,14 @@ namespace CLogica.Gestores
             }
         }
 
-        public void registrarUsuario(string nombre, string contraseña)
+        public void registrarUsuario(string nombre, string contraseña, byte[] imagen)
         {
             UsuarioDB cdatos = new UsuarioDB();
             try
             {
                 if (nombre != "" && contraseña != "")
                 {
-                    cdatos.registrarUsuario(nombre, contraseña);
+                    cdatos.registrarUsuario(nombre, contraseña, imagen);
                 }
                 else
                 {

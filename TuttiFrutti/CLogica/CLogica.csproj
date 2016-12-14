@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExceptionPersonalizada.cs" />
+    <Compile Include="Gestores\GestorDeImagen.cs" />
     <Compile Include="Gestores\GestorDeJuegos.cs" />
     <Compile Include="Gestores\GestorDePalabra.cs" />
     <Compile Include="Gestores\GestorDeSala.cs" />

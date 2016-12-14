@@ -102,7 +102,7 @@ namespace CDatos.ClasesDB
             }
         }
 
-        public void registrarUsuario(string nombre, string contraseña)
+        public void registrarUsuario(string nombre, string contraseña, byte[] imagen)
         {
             MySqlConnection con = Conexion.obtenerConexion();
             try
@@ -111,8 +111,11 @@ namespace CDatos.ClasesDB
 
                 int ultId = obtenerUltimoId();
 
-                string strConsulta = "INSERT INTO Usuario VALUES (" + ultId + ", \"" + nombre + "\", \"" + contraseña + "\")";
-                MySqlCommand cmd = new MySqlCommand(strConsulta, con);
+                string strConsulta = "INSERT INTO Usuario VALUES (" + ultId + ", \"" + nombre + "\", \"" + contraseña + "\", @Imagen)";
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = strConsulta;
+                cmd.Parameters.AddWithValue("@Imagen", imagen);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();

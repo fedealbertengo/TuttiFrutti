@@ -38,8 +38,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.imagen = new System.Windows.Forms.PictureBox();
+            this.btnCargarImagen = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imagen)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -116,6 +121,9 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.btnCargarImagen);
+            this.panel1.Controls.Add(this.imagen);
             this.panel1.Controls.Add(this.tbContra2);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.tbContra);
@@ -124,23 +132,56 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(14, 16);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(332, 151);
+            this.panel1.Size = new System.Drawing.Size(332, 260);
             this.panel1.TabIndex = 8;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btnCancelar);
             this.panel2.Controls.Add(this.btnAceptar);
-            this.panel2.Location = new System.Drawing.Point(12, 173);
+            this.panel2.Location = new System.Drawing.Point(15, 282);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(333, 47);
             this.panel2.TabIndex = 9;
+            // 
+            // imagen
+            // 
+            this.imagen.Location = new System.Drawing.Point(113, 148);
+            this.imagen.Name = "imagen";
+            this.imagen.Size = new System.Drawing.Size(107, 93);
+            this.imagen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imagen.TabIndex = 8;
+            this.imagen.TabStop = false;
+            // 
+            // btnCargarImagen
+            // 
+            this.btnCargarImagen.Location = new System.Drawing.Point(242, 180);
+            this.btnCargarImagen.Name = "btnCargarImagen";
+            this.btnCargarImagen.Size = new System.Drawing.Size(40, 23);
+            this.btnCargarImagen.TabIndex = 9;
+            this.btnCargarImagen.Text = "...";
+            this.btnCargarImagen.UseVisualStyleBackColor = true;
+            this.btnCargarImagen.Click += new System.EventHandler(this.btnCargarImagen_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(34, 178);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 26);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Imagen de\r\nPerfil";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // Registrarse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(360, 229);
+            this.ClientSize = new System.Drawing.Size(360, 341);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "Registrarse";
@@ -150,6 +191,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.imagen)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -166,5 +208,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnCargarImagen;
+        private System.Windows.Forms.PictureBox imagen;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

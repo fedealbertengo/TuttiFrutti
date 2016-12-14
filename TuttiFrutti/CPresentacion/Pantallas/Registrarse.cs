@@ -49,7 +49,7 @@ namespace CPresentacion.Pantallas
             {
                 if (tbContra.Text == tbContra2.Text)
                 {
-                    clog.registrarUsuario(tbNombre.Text, tbContra.Text);
+                    clog.registrarUsuario(tbNombre.Text, tbContra.Text, GestorDeImagen.Convertir_Imagen_Bytes(imagen.Image));
                     DialogResult dialogResult = MessageBox.Show("El usuario " + tbNombre.Text + " se ha creado correctamente ¿Desea cargar otro ?.", "Éxito", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     limpiarCampos();
                     if (dialogResult == DialogResult.No)
@@ -83,6 +83,15 @@ namespace CPresentacion.Pantallas
         private void Registrarse_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnCargarImagen_Click(object sender, EventArgs e)
+        {
+            this.openFileDialog1.ShowDialog();
+            if (!openFileDialog1.FileName.Equals(""))
+            {
+                imagen.Load(this.openFileDialog1.FileName);
+            }
         }
     }
 }

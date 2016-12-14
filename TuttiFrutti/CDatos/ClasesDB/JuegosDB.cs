@@ -650,7 +650,7 @@ namespace CDatos.ClasesDB
             {
                 Conexion.conectar(con);
 
-                string selectB = "SELECT * FROM BanderasJuego";
+                string selectB = "SELECT BJ.IdBandera, BJ.IdJuego, BJ.NombreUsuario, BJ.Bandera, U.fotoPerfil FROM BanderasJuego BJ INNER JOIN Usuario U ON BJ.NombreUsuario = U.NombreUsuario";
 
                 string orderByB = "ORDER BY IdBandera ASC";
 
