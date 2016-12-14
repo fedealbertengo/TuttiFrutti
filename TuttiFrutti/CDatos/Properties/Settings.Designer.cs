@@ -26,8 +26,8 @@ namespace CDatos.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\fede_\\OneDrive\\Documentos\\" +
-            "GitHub\\TuttiFrutti\\TuttiFruttiDB.accdb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;user id=Pinii;password=hola12;persistsecurityinfo=True;database=" +
+            "tuttifrutti")]
         public string Conexion {
             get {
                 return ((string)(this["Conexion"]));
