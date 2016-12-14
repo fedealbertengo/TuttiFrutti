@@ -33,6 +33,8 @@
             this.pnUs1 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.botonUniversal = new System.Windows.Forms.Button();
+            this.tbChat = new System.Windows.Forms.TextBox();
+            this.tbMensaje = new System.Windows.Forms.TextBox();
             this.pnUs1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,11 +77,32 @@
             this.botonUniversal.UseVisualStyleBackColor = true;
             this.botonUniversal.Click += new System.EventHandler(this.botonUniversal_Click);
             // 
+            // tbChat
+            // 
+            this.tbChat.Location = new System.Drawing.Point(404, 327);
+            this.tbChat.Multiline = true;
+            this.tbChat.Name = "tbChat";
+            this.tbChat.ReadOnly = true;
+            this.tbChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbChat.Size = new System.Drawing.Size(100, 20);
+            this.tbChat.TabIndex = 3;
+            // 
+            // tbMensaje
+            // 
+            this.tbMensaje.Location = new System.Drawing.Point(41, 327);
+            this.tbMensaje.Name = "tbMensaje";
+            this.tbMensaje.Size = new System.Drawing.Size(100, 20);
+            this.tbMensaje.TabIndex = 4;
+            this.tbMensaje.TextChanged += new System.EventHandler(this.tbMensaje_TextChanged);
+            this.tbMensaje.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbMensaje_KeyPress);
+            // 
             // Sala
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 405);
+            this.Controls.Add(this.tbMensaje);
+            this.Controls.Add(this.tbChat);
             this.Controls.Add(this.botonUniversal);
             this.Controls.Add(this.pnUs1);
             this.Name = "Sala";
@@ -89,6 +112,7 @@
             this.VisibleChanged += new System.EventHandler(this.Sala_VisibleChanged);
             this.pnUs1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -98,5 +122,7 @@
         private System.Windows.Forms.Panel pnUs1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button botonUniversal;
+        private System.Windows.Forms.TextBox tbChat;
+        private System.Windows.Forms.TextBox tbMensaje;
     }
 }

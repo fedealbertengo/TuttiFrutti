@@ -7,13 +7,13 @@ using System.Windows.Forms;
 namespace CDatos
 {
     public class Conexion {
-        public static OleDbConnection obtenerConexion()
+        public static SqlConnection obtenerConexion()
         {
-            OleDbConnection oledbConnection = new OleDbConnection(CDatos.Properties.Settings.Default.Conexion);
-            return oledbConnection;
+            SqlConnection sqlConnection = new SqlConnection(CDatos.Properties.Settings.Default.Conexion);
+            return sqlConnection;
         }
 
-        public static void conectar(OleDbConnection conn)
+        public static void conectar(SqlConnection conn)
         {
             try
             {

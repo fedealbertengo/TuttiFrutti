@@ -34,7 +34,7 @@ namespace CPresentacion
 
         private void PantallaInicio_Load(object sender, EventArgs e)
         {
-
+            /*
             try
             {
 
@@ -57,12 +57,12 @@ namespace CPresentacion
                 {
                     clogPal.agregarPalabra(str, str[0], "Color");
                 }
-                /*
-                foreach (string str in objetos)
-                {
-                    clogPal.agregarPalabra(str, str[0], "Objeto");
-                }
-                */
+                
+                //foreach (string str in objetos)
+                //{
+                    //clogPal.agregarPalabra(str, str[0], "Objeto");
+                //}
+                
                 foreach (string str in lugares)
                 {
                     clogPal.agregarPalabra(str, str[0], "Lugar");
@@ -76,6 +76,7 @@ namespace CPresentacion
             {
                 MessageBox.Show("Se ha producido un error:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            */
         }
     }
 }

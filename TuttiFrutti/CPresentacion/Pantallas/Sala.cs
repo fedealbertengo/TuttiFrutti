@@ -147,7 +147,11 @@ namespace CPresentacion.Pantallas
             {
                 filas = 1;
             }
-            this.Size = new Size((columnas * (pnUs1.Size.Width + 50)) + 50, (filas * (pnUs1.Size.Height + 50)) + 100);
+            tbChat.Size = new Size((columnas * (pnUs1.Size.Width + 50)), 100);
+            tbMensaje.Size = new Size(tbChat.Size.Width, 20);
+            this.Size = new Size(tbChat.Size.Width+ 50, (filas * (pnUs1.Size.Height + 50)) + tbChat.Size.Height + 10 + tbMensaje.Size.Height + 100);
+            tbChat.Location = new Point(((this.Size.Width / 2) - (tbChat.Size.Width / 2)), (filas * (pnUs1.Size.Height + 50)) + 25);
+            tbMensaje.Location = new Point(tbChat.Location.X, tbChat.Location.Y + tbChat.Size.Height + 10);
             botonUniversal.Location = new Point(((this.Size.Width / 2) - (botonUniversal.Size.Width / 2)), ((this.Size.Height) - (botonUniversal.Size.Height/2) - 25));
             this.Size = new Size(this.Size.Width, this.Size.Height + 50);
             if (!listo)
@@ -228,6 +232,8 @@ namespace CPresentacion.Pantallas
             GestorDeJuegos clogJue = new GestorDeJuegos();
             DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
 
+            GestorDeSala clogSala = new GestorDeSala();
+
             DataTable jugadoresUnidos = clogJue.getBanderas(idJuego).Tables[0];
             int i = 0;
             listo = true;
@@ -235,7 +241,7 @@ namespace CPresentacion.Pantallas
             {
                 string usuario = dr.ItemArray[2].ToString();
                 string estado = dr.ItemArray[3].ToString();
-                Panel panUs = (Panel) this.Controls[i+1];
+                Panel panUs = (Panel) this.Controls[i+3];
                 Panel panFoto = (Panel) panUs.Controls[0];
                 Label lblNombre = (Label) panUs.Controls[1];
                 if (usuario.Equals(GestorDeUsuario.getUsuarioLogeado()))
@@ -300,6 +306,11 @@ namespace CPresentacion.Pantallas
                 }
                 i++;
             }
+            string chat = clogSala.obtenerChat(idJuego);
+            if (!tbChat.Text.Equals(chat))
+            {
+                tbChat.Text = chat;
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -361,6 +372,29 @@ namespace CPresentacion.Pantallas
                 clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
                 timer1.Enabled = true;
                 botonUniversal.Enabled = true;
+            }
+        }
+
+        private void tbMensaje_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbMensaje_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == (char)13)
+            {
+                e.Handled = true;
+                GestorDeSala clogSal = new GestorDeSala();
+                try
+                {
+                    clogSal.actualizarChat(idJuego, tbChat.Text + GestorDeUsuario.getUsuarioLogeado() + ":" + tbMensaje.Text + '\r' + '\n');
+                    tbMensaje.Text = "";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Se ha producido un error:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

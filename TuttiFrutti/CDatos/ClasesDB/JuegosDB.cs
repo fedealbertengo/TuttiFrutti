@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,12 @@ namespace CDatos.ClasesDB
 
         public void actualizarPuntajeRonda(int idJuego, int nroRonda, string usuario, int puntaje)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("UPDATE Ronda SET Puntos = " + puntaje + " WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
+                SqlCommand cmd = new SqlCommand("UPDATE Ronda SET Puntos = " + puntaje + " WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
 
                 cmd.ExecuteNonQuery();
 
@@ -38,7 +39,7 @@ namespace CDatos.ClasesDB
 
         public int obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -57,9 +58,9 @@ namespace CDatos.ClasesDB
                     where = "WHERE Palabra = \"" + palabra + "\" AND Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"";
                 }
 
-                OleDbCommand cmd = new OleDbCommand("SELECT * FROM Palabras " + where, con);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Palabras " + where, con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -67,30 +68,31 @@ namespace CDatos.ClasesDB
 
                 DataSet ds1 = new DataSet();
 
-                cmd = new OleDbCommand("SELECT * FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND " + categoria + " = \"" + palabra + "\" AND NOT(Jugador = \"" + usuario + "\")", con);
+                cmd = new SqlCommand("SELECT * FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND " + categoria + " = \"" + palabra + "\" AND NOT(Jugador = \"" + usuario + "\")", con);
 
-                da = new OleDbDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds1, "Ronda");
 
                 cmd.ExecuteNonQuery();
 
+                /*
                 DataSet ds2 = new DataSet();
 
-                cmd = new OleDbCommand("SELECT * FROM Palabras WHERE Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"", con);
+                cmd = new SqlCommand("SELECT * FROM Palabras WHERE Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"", con);
 
-                da = new OleDbDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds2, "Ronda");
 
                 cmd.ExecuteNonQuery();
-
+                */
                 con.Dispose();
                 con.Close();
 
-                if(ds.Tables[0].Rows.Count == 0 && ds2.Tables[0].Rows.Count > 0)
+                if(ds.Tables[0].Rows.Count == 0/* && ds2.Tables[0].Rows.Count > 0*/)
                 {
-                    puntos = -10;
+                    puntos = 0;
                 }
                 else
                 {
@@ -112,7 +114,7 @@ namespace CDatos.ClasesDB
 
         public List<string> obtenerDatosRonda(int idJuego, int nroRonda, string usuario)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -121,9 +123,9 @@ namespace CDatos.ClasesDB
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("SELECT Letra, Nombre, Animal, Color, Objeto, Lugar, Comida FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
+                SqlCommand cmd = new SqlCommand("SELECT Letra, Nombre, Animal, Color, Objeto, Lugar, Comida FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -148,16 +150,16 @@ namespace CDatos.ClasesDB
         }
         public int obtenerNroRonda(string usuario, int juego)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("SELECT IIF(ISNULL(MAX(NroRonda)),0,MAX(NroRonda)), IIF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
+                SqlCommand cmd = new SqlCommand("SELECT IIF(ISNULL(MAX(NroRonda)),0,MAX(NroRonda)), IIF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -186,7 +188,7 @@ namespace CDatos.ClasesDB
 
         public void crearRonda(string datos)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -195,9 +197,9 @@ namespace CDatos.ClasesDB
 
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("SELECT IIF(ISNULL(MAX(IdRespuesta)), 0, MAX(IdRespuesta)) FROM Ronda", con);
+                SqlCommand cmd = new SqlCommand("SELECT IIF(ISNULL(MAX(IdRespuesta)), 0, MAX(IdRespuesta)) FROM Ronda", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -205,7 +207,7 @@ namespace CDatos.ClasesDB
 
                 int nroRespuesta = ((int)ds.Tables[0].Rows[0].ItemArray[0] + 1);
 
-                cmd = new OleDbCommand("INSERT INTO Ronda VALUES (" +  nroRespuesta + ",  \"" + datos, con);
+                cmd = new SqlCommand("INSERT INTO Ronda VALUES (" +  nroRespuesta + ",  \"" + datos, con);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();
@@ -221,12 +223,12 @@ namespace CDatos.ClasesDB
 
         public void cargarRonda(string datos, string where)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("UPDATE Ronda SET " + datos + " " + where, con);
+                SqlCommand cmd = new SqlCommand("UPDATE Ronda SET " + datos + " " + where, con);
 
                 cmd.ExecuteNonQuery();
 
@@ -243,16 +245,16 @@ namespace CDatos.ClasesDB
 
         public bool hayTuttiFrutti(int juego, int ronda)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -275,12 +277,12 @@ namespace CDatos.ClasesDB
 
         public void modificarEstado(int idJuego, string estado)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("UPDATE Juego SET Estado = \"" + estado + "\" WHERE Id = " + idJuego, con);
+                SqlCommand cmd = new SqlCommand("UPDATE Juego SET Estado = \"" + estado + "\" WHERE Id = " + idJuego, con);
 
                 cmd.ExecuteNonQuery();
             }
@@ -294,14 +296,14 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoIDBandera()
         {
             DataSet ds = new DataSet();
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("Select Max(IdBandera) As M From BanderasJuego", con);
+                SqlCommand cmd = new SqlCommand("Select Max(IdBandera) As M From BanderasJuego", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "BanderasJuego");
 
@@ -330,13 +332,13 @@ namespace CDatos.ClasesDB
             }
         }
 
-        public void eliminarBanderas(int idJuego, OleDbConnection con)
+        public void eliminarBanderas(int idJuego, SqlConnection con)
         {
             try
             {
                 string consulta = "DELETE FROM BanderasJuego WHERE IdJuego = " + idJuego;
 
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
                 cmd.ExecuteNonQuery();
             }
@@ -352,14 +354,14 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoIDJuego()
         {
             DataSet ds = new DataSet();
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("Select Max(Id) As M From Juego", con);
+                SqlCommand cmd = new SqlCommand("Select Max(Id) As M From Juego", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 
@@ -391,7 +393,7 @@ namespace CDatos.ClasesDB
 
         public void agregarSala(string nombre, string usuario, int capacidad)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -404,12 +406,15 @@ namespace CDatos.ClasesDB
 
                 string consulta = "INSERT INTO Juego VALUES (" + idJuego + ", \"" + nombre + "\", " + idUsuario + ", " + capacidad + ", 0, \"Esperando\")";
 
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
                 cmd.ExecuteNonQuery();
 
                 con.Dispose();
                 con.Close();
+
+                SalaDB cdatosSala = new SalaDB();
+                cdatosSala.crearChat(idJuego);
             }
             catch (Exception e)
             {
@@ -423,7 +428,7 @@ namespace CDatos.ClasesDB
 
         public void eliminarJuego(int idJuego)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -432,7 +437,7 @@ namespace CDatos.ClasesDB
 
                 string consulta = "DELETE FROM Juego WHERE Id = " + idJuego;
 
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
                 cmd.ExecuteNonQuery();
 
@@ -450,16 +455,16 @@ namespace CDatos.ClasesDB
 
         public void unirUsuarioAJuego(int idJuego, string usuario)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
                 string consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE (NOT(J.Estado = \"Terminado\") AND BJ.NombreUsuario = \"" + usuario + "\" AND NOT(J.Id = " + idJuego + "))";
 
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 DataSet ds = new DataSet();
 
@@ -470,9 +475,9 @@ namespace CDatos.ClasesDB
 
                 consulta = "SELECT * FROM Juego WHERE Estado = \"Esperando\" AND Id = " + idJuego + " AND (Capacidad - Unidos > 0)";
 
-                cmd = new OleDbCommand(consulta, con);
+                cmd = new SqlCommand(consulta, con);
 
-                da = new OleDbDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 DataSet ds2 = new DataSet();
 
@@ -483,9 +488,9 @@ namespace CDatos.ClasesDB
 
                 consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = \"Jugando\" AND BJ.NombreUsuario = \"" + usuario + "\" AND J.Id = " + idJuego;
 
-                cmd = new OleDbCommand(consulta, con);
+                cmd = new SqlCommand(consulta, con);
 
-                da = new OleDbDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 DataSet ds3 = new DataSet();
 
@@ -501,7 +506,7 @@ namespace CDatos.ClasesDB
 
                     consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego + ", \"" + usuario + "\", \"Esperando\")";
 
-                    cmd = new OleDbCommand(consulta, con);
+                    cmd = new SqlCommand(consulta, con);
 
                     cmd.ExecuteNonQuery();
 
@@ -511,9 +516,9 @@ namespace CDatos.ClasesDB
 
                     consulta = "SELECT Unidos FROM Juego WHERE Id = " + idJuego;
 
-                    cmd = new OleDbCommand(consulta, con);
+                    cmd = new SqlCommand(consulta, con);
 
-                    da = new OleDbDataAdapter(cmd);
+                    da = new SqlDataAdapter(cmd);
 
                     da.Fill(ds, "Juego");
 
@@ -523,7 +528,7 @@ namespace CDatos.ClasesDB
 
                     consulta = "UPDATE Juego SET Unidos = ( " + unidos + " + 1) WHERE Id = " + idJuego;
 
-                    cmd = new OleDbCommand(consulta, con);
+                    cmd = new SqlCommand(consulta, con);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -566,7 +571,7 @@ namespace CDatos.ClasesDB
         public DataSet getJuegos(string where)
         {
             DataSet ds = new DataSet();
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -581,9 +586,9 @@ namespace CDatos.ClasesDB
                     consulta = select + " " + orderBy;
                 }
 
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 
@@ -605,7 +610,7 @@ namespace CDatos.ClasesDB
         public DataSet getBanderas(string where)
         {
             DataSet ds = new DataSet();
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -622,9 +627,9 @@ namespace CDatos.ClasesDB
                     consulta = select + " " + orderBy;
                 }
 
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 

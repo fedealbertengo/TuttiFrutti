@@ -70,7 +70,7 @@ namespace CLogica.Gestores
         {
             try
             {
-                string datos = usuario + "\", " + idJuego + ", " + nroRonda + ", \"" + letra + "\", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0)";
+                string datos = usuario + "\", " + idJuego + ", " + nroRonda + ", \"" + letra + "\", NULL, NULL, NULL, NULL, NULL, NULL, 0, 0)";
                 JuegosDB cdatos = new JuegosDB();
                 cdatos.crearRonda(datos);
             }

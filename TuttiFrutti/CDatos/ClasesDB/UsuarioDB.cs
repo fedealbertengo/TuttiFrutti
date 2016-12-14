@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +15,14 @@ namespace CDatos.ClasesDB
         public int getIdUsuario(string nombre)
         {
             DataSet ds = new DataSet();
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("Select Id From Usuario Where NombreUsuario = \"" + nombre + "\"", con);
+                SqlCommand cmd = new SqlCommand("Select Id From Usuario Where NombreUsuario = \"" + nombre + "\"", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Usuario");
 
@@ -45,11 +46,11 @@ namespace CDatos.ClasesDB
 
         public void cambiarEstado(string usuario, string estado)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
-                OleDbCommand cmd = new OleDbCommand("UPDATE BanderasJuego SET Bandera = \"" + estado + "\" WHERE NombreUsuario = \"" + usuario + "\"", con);
+                SqlCommand cmd = new SqlCommand("UPDATE BanderasJuego SET Bandera = \"" + estado + "\" WHERE NombreUsuario = \"" + usuario + "\"", con);
                 cmd.ExecuteNonQuery();
                 con.Dispose();
                 con.Close();
@@ -65,14 +66,14 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoId()
         {
             DataSet ds = new DataSet();
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                OleDbCommand cmd = new OleDbCommand("Select Max(Id) As M From Usuario", con);
+                SqlCommand cmd = new SqlCommand("Select Max(Id) As M From Usuario", con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Usuario");
 
@@ -103,7 +104,7 @@ namespace CDatos.ClasesDB
 
         public void registrarUsuario(string nombre, string contraseña)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -111,7 +112,7 @@ namespace CDatos.ClasesDB
                 int ultId = obtenerUltimoId();
 
                 string strConsulta = "INSERT INTO Usuario VALUES (" + ultId + ", \"" + nombre + "\", \"" + contraseña + "\")";
-                OleDbCommand cmd = new OleDbCommand(strConsulta, con);
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();
@@ -140,16 +141,16 @@ namespace CDatos.ClasesDB
         }
         public void iniciarSesion(string nombre, string contraseña)
         {
-            OleDbConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             DataSet ds = new DataSet();
             try
             {
                 Conexion.conectar(con);
 
                 string strConsulta = "SELECT * FROM Usuario WHERE NombreUsuario = \"" + nombre + "\" AND Contraseña = \"" + contraseña + "\"";
-                OleDbCommand cmd = new OleDbCommand(strConsulta, con);
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
 
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Usuario");
 
