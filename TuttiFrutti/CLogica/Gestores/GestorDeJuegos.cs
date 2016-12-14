@@ -5,20 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using CDatos.ClasesDB;
 using System.Data;
+using CEntidades.Entidades;
+
 
 namespace CLogica.Gestores
 {
     public class GestorDeJuegos
     {
 
-        public int calcularPuntaje(int idJuego, int nroRonda, string usuario)
+        public RdoRonda calcularPuntaje(int idJuego, int nroRonda, string usuario)
         {
             try
             {
                 JuegosDB cdatos = new JuegosDB();
                 List<string> ronda = cdatos.obtenerDatosRonda(idJuego, nroRonda, usuario);
                 char letra = ronda[0][0];
-                int puntaje = 0;
+                RdoRonda rdo = new RdoRonda();
                 for(int i = 1; i<ronda.Count(); i++)
                 {
                     string categoria = "";
@@ -43,10 +45,15 @@ namespace CLogica.Gestores
                             categoria = "Comida";
                             break;
                     }
-                    puntaje += cdatos.obtenerPuntosPalabra(idJuego, nroRonda, usuario, letra, ronda[i], categoria);
+                    RdoPalabra resultado = cdatos.obtenerPuntosPalabra(idJuego, nroRonda, usuario, letra, ronda[i], categoria);
+                    rdo.Puntos += resultado.Puntos;
+                    if(!resultado.Palabra.Equals(""))
+                    {
+                        rdo.Palabras.Add(resultado.Palabra);
+                    }
                 }
-                cdatos.actualizarPuntajeRonda(idJuego, nroRonda, usuario, puntaje);
-                return puntaje;
+                cdatos.actualizarPuntajeRonda(idJuego, nroRonda, usuario, rdo.Puntos);
+                return rdo;
             }
             catch (Exception ex)
             {

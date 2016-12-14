@@ -6,6 +6,7 @@ using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CEntidades.Entidades;
 
 namespace CDatos.ClasesDB
 {
@@ -37,13 +38,17 @@ namespace CDatos.ClasesDB
 
         }
 
-        public int obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
+        public RdoPalabra obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
         {
             MySqlConnection con = Conexion.obtenerConexion();
 
             try
             {
-                int puntos = 10;
+                RdoPalabra rdo = new RdoPalabra();
+                rdo.Puntos = 10;
+                Palabra pal = new Palabra();
+                pal.Pala = "";
+                rdo.Palabra = pal;
 
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
@@ -92,17 +97,22 @@ namespace CDatos.ClasesDB
 
                 if(ds.Tables[0].Rows.Count == 0/* && ds2.Tables[0].Rows.Count > 0*/)
                 {
-                    puntos = 0;
+                    pal = new Palabra();
+                    pal.Pala = palabra;
+                    pal.Categoria = categoria;
+                    pal.Letra = letra;
+                    rdo.Palabra = pal;
+                    rdo.Puntos = 0;
                 }
                 else
                 {
                     if (ds1.Tables[0].Rows.Count > 0)
                     {
-                        puntos = 5;
+                        rdo.Puntos = 5;
                     }
                 }
 
-                return puntos;
+                return rdo;
             }
             catch (Exception ex)
             {
@@ -197,7 +207,7 @@ namespace CDatos.ClasesDB
 
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(nroRonda),0) FROM Ronda", con);
+                MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(IdRespuesta),0) FROM Ronda", con);
 
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
 
@@ -413,6 +423,8 @@ namespace CDatos.ClasesDB
                 con.Dispose();
                 con.Close();
 
+                idJuego = obtenerUltimoIDJuego() -1;
+
                 SalaDB cdatosSala = new SalaDB();
                 cdatosSala.crearChat(idJuego);
             }
@@ -500,51 +512,74 @@ namespace CDatos.ClasesDB
 
                 //----------------------------------------------------------------------
 
-                if (ds.Tables[0].Rows.Count == 0 && (ds2.Tables[0].Rows.Count == 1 || ds3.Tables[0].Rows.Count == 1))
+                consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = \"Esperando\" AND BJ.NombreUsuario = \"" + usuario + "\" AND J.Id = " + idJuego;
+
+                cmd = new MySqlCommand(consulta, con);
+
+                da = new MySqlDataAdapter(cmd);
+
+                DataSet ds4 = new DataSet();
+
+                da.Fill(ds4, "Juego");
+
+                cmd.ExecuteNonQuery();
+
+                //----------------------------------------------------------------------
+
+
+                if (ds4.Tables[0].Rows.Count == 1)
                 {
-                    int idBandera = this.obtenerUltimoIDBandera();
-
-                    consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego + ", \"" + usuario + "\", \"Esperando\")";
-
-                    cmd = new MySqlCommand(consulta, con);
-
-                    cmd.ExecuteNonQuery();
-
-                    //----------------------------------------------------------------------
-
-                    ds = new DataSet();
-
-                    consulta = "SELECT Unidos FROM Juego WHERE Id = " + idJuego;
-
-                    cmd = new MySqlCommand(consulta, con);
-
-                    da = new MySqlDataAdapter(cmd);
-
-                    da.Fill(ds, "Juego");
-
-                    cmd.ExecuteNonQuery();
-
-                    int unidos = (int)ds.Tables[0].Rows[0].ItemArray[0];
-
-                    consulta = "UPDATE Juego SET Unidos = ( " + unidos + " + 1) WHERE Id = " + idJuego;
-
-                    cmd = new MySqlCommand(consulta, con);
-
-                    cmd.ExecuteNonQuery();
+                   throw new ExceptionPersonalizada("Usted ya se encuentra en la sala.");
                 }
                 else
                 {
-                    string str = "";
-                    if(ds.Tables[0].Rows.Count != 0)
+                    if (ds.Tables[0].Rows.Count == 0 && (ds2.Tables[0].Rows.Count == 1 || ds3.Tables[0].Rows.Count == 1))
                     {
-                        str += "Usted ya se encuentra en una sala activa.\n";
+                        int idBandera = this.obtenerUltimoIDBandera();
+
+                        consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego + ", \"" + usuario + "\", \"Esperando\")";
+
+                        cmd = new MySqlCommand(consulta, con);
+
+                        cmd.ExecuteNonQuery();
+
+                        //----------------------------------------------------------------------
+
+                        ds = new DataSet();
+
+                        consulta = "SELECT Unidos FROM Juego WHERE Id = " + idJuego;
+
+                        cmd = new MySqlCommand(consulta, con);
+
+                        da = new MySqlDataAdapter(cmd);
+
+                        da.Fill(ds, "Juego");
+
+                        cmd.ExecuteNonQuery();
+
+                        int unidos = (int)ds.Tables[0].Rows[0].ItemArray[0];
+
+                        consulta = "UPDATE Juego SET Unidos = ( " + unidos + " + 1) WHERE Id = " + idJuego;
+
+                        cmd = new MySqlCommand(consulta, con);
+
+                        cmd.ExecuteNonQuery();
                     }
-                    if (ds.Tables[0].Rows.Count != 1)
+                    else
                     {
-                        str += "La sala a la que intenta unirse está llena o está en juego.\n";
+                        string str = "";
+                        if (ds.Tables[0].Rows.Count != 0)
+                        {
+                            str += "Usted ya se encuentra en una sala activa.\n";
+                        }
+                        if (ds.Tables[0].Rows.Count != 1)
+                        {
+                            str += "La sala a la que intenta unirse está llena o está en juego.\n";
+                        }
+                        str = str.Remove(str.LastIndexOf('\n'));
+                        throw new ExceptionPersonalizada(str);
                     }
-                    str = str.Remove(str.LastIndexOf('\n'));
-                    throw new ExceptionPersonalizada(str);
+
                 }
             }
             catch (Exception e)

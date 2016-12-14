@@ -2,7 +2,6 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Data.OleDb;
-using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
 namespace CDatos

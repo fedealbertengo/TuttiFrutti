@@ -213,6 +213,7 @@
             this.Text = "Planilla";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Planilla_FormClosed);
             this.Load += new System.EventHandler(this.Planilla_Load);
+            this.VisibleChanged += new System.EventHandler(this.Planilla_VisibleChanged);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

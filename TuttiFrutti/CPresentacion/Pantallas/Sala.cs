@@ -154,7 +154,7 @@ namespace CPresentacion.Pantallas
             tbMensaje.Location = new Point(tbChat.Location.X, tbChat.Location.Y + tbChat.Size.Height + 10);
             botonUniversal.Location = new Point(((this.Size.Width / 2) - (botonUniversal.Size.Width / 2)), ((this.Size.Height) - (botonUniversal.Size.Height/2) - 25));
             this.Size = new Size(this.Size.Width, this.Size.Height + 50);
-            if (!listo)
+            if (!listo && GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
             {
                 botonUniversal.Text = "No Listo";
                 botonUniversal.Enabled = false;
@@ -168,14 +168,14 @@ namespace CPresentacion.Pantallas
 
             if (GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
             {
-                if(listo && !empezar && !botonUniversal.Text.Equals("Empezar"))
+                if (listo && !empezar)
                 {
                     botonUniversal.Enabled = true;
                     botonUniversal.Text = "Empezar";
                 }
                 else
                 {
-                    if (!listo && empezar)
+                    if (!listo)
                     {
                         botonUniversal.Enabled = false;
                         botonUniversal.Text = "No Listo";
@@ -231,9 +231,6 @@ namespace CPresentacion.Pantallas
 
             GestorDeJuegos clogJue = new GestorDeJuegos();
             DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
-
-            GestorDeSala clogSala = new GestorDeSala();
-
             DataTable jugadoresUnidos = clogJue.getBanderas(idJuego).Tables[0];
             int i = 0;
             listo = true;
@@ -246,10 +243,13 @@ namespace CPresentacion.Pantallas
                 Label lblNombre = (Label) panUs.Controls[1];
                 if (usuario.Equals(GestorDeUsuario.getUsuarioLogeado()))
                 {
-                    if (panUs.BackColor == Color.Yellow && estado.Equals("Esperando"))
+                    if (estado.Equals("Esperando"))
                     {
-                        panUs.BackColor = Color.Blue;
-                        panUs.ForeColor = Color.White;
+                        if(panUs.BackColor == Color.Yellow)
+                        {
+                            panUs.BackColor = Color.Blue;
+                            panUs.ForeColor = Color.White;
+                        }
                         if (usuario.Equals(juego.Rows[0].ItemArray[2]))
                         {
                             botonUniversal.Text = "Empezar";
@@ -266,10 +266,13 @@ namespace CPresentacion.Pantallas
                     }
                     else
                     {
-                        if (panUs.BackColor == Color.Blue && estado.Equals("Listo"))
+                        if (estado.Equals("Listo"))
                         {
-                            panUs.BackColor = Color.Yellow;
-                            panUs.ForeColor = Color.Black;
+                            if(panUs.BackColor == Color.Blue)
+                            {
+                                panUs.BackColor = Color.Yellow;
+                                panUs.ForeColor = Color.Black;
+                            }
                             if (usuario.Equals(juego.Rows[0].ItemArray[2]))
                             {
                                 botonUniversal.Text = "Cancelar";
@@ -288,13 +291,13 @@ namespace CPresentacion.Pantallas
                 }
                 else
                 {
-                    if (panUs.BackColor == Color.Green && estado.Equals("Esperando"))
+                    if (estado.Equals("Esperando"))
                     {
-                        panUs.BackColor = Color.Red;
-                        if (listo)
+                        if(panUs.BackColor == Color.Green)
                         {
-                            listo = false;
+                            panUs.BackColor = Color.Red;
                         }
+                        listo = false;
                     }
                     else
                     {
@@ -306,22 +309,23 @@ namespace CPresentacion.Pantallas
                 }
                 i++;
             }
-            string chat = clogSala.obtenerChat(idJuego);
-            if (!tbChat.Text.Equals(chat))
-            {
-                tbChat.Text = chat;
-            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            redibujarParticipantes();
-            empezarJuego();
-            if (empezar && listo)
+            try
             {
-                GestorDeJuegos clogJue = new GestorDeJuegos();
-                try
+                redibujarParticipantes();
+                GestorDeSala clogSala = new GestorDeSala();
+                string chat = clogSala.obtenerChat(idJuego);
+                if (!tbChat.Text.Equals(chat))
                 {
+                    tbChat.Text = chat;
+                }
+                empezarJuego();
+                if (empezar && listo)
+                {
+                    GestorDeJuegos clogJue = new GestorDeJuegos();
                     clogJue.modificarEstado(idJuego, "Jugando");
                     Planilla planilla = new Planilla(idJuego);
                     this.Hide();
@@ -330,15 +334,18 @@ namespace CPresentacion.Pantallas
                     botonUniversal.Enabled = false;
                     planilla.Show(this);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void botonUniversal_Click(object sender, EventArgs e)
         {
+            GestorDeJuegos clogJue = new GestorDeJuegos();
+            DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
             GestorDeUsuario clogUs = new GestorDeUsuario();
             try
             {
@@ -352,10 +359,22 @@ namespace CPresentacion.Pantallas
                     if (botonUniversal.Text.Equals("Listo") || botonUniversal.Text.Equals("Empezar"))
                     {
                         clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Listo");
+                        if (GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
+                        {
+                            empezar = true;
+                            botonUniversal.Text = "Cancelar";
+                        }
+                        else
+                        {
+                            listo = true;
+                            botonUniversal.Text = "No Listo";
+                        }
                     }
                     else
                     {
                         clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
+                        listo = false;
+                        botonUniversal.Text = "Listo";
                     }
                 }
             }

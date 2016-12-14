@@ -61,18 +61,11 @@ namespace CPresentacion.Pantallas
                 int idJuego = (int) clog.getJuegos(dgvSalas.SelectedRows[0].Cells[1].Value.ToString(), dgvSalas.SelectedRows[0].Cells[0].Value.ToString(), false, false).Tables[0].Rows[0].ItemArray[0];
                 int unidos = (int) dgvSalas.SelectedRows[0].Cells[2].Value;
                 int capacidad = (int)dgvSalas.SelectedRows[0].Cells[3].Value;
-                if (capacidad - unidos > 0)
-                {
-                    clog.unirUsuarioAJuego(idJuego);
-                    MessageBox.Show("Usted se ha unido correctamente a la sala " + dgvSalas.SelectedRows[0].Cells[0].Value.ToString(), "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    DataTable dt = clog.getJuegos(tbProp.Text, tbNombreSala.Text, cbLlenas.Checked, cbVacias.Checked).Tables[0];
-                    dt.Columns.RemoveAt(0);
-                    dgvSalas.DataSource = dt;
-                }
-                else
-                {
-                    MessageBox.Show(("La sala a la que intenta unirse está llena."), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                clog.unirUsuarioAJuego(idJuego);
+                MessageBox.Show("Usted se ha unido correctamente a la sala " + dgvSalas.SelectedRows[0].Cells[0].Value.ToString(), "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DataTable dt = clog.getJuegos(tbProp.Text, tbNombreSala.Text, cbLlenas.Checked, cbVacias.Checked).Tables[0];
+                dt.Columns.RemoveAt(0);
+                dgvSalas.DataSource = dt;
             }
             catch (Exception ex)
             {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CLogica.Gestores;
 using CPresentacion.Pantallas;
+using CEntidades.Entidades;
 
 namespace CPresentacion.Pantallas
 {
@@ -20,6 +21,7 @@ namespace CPresentacion.Pantallas
         public bool tuttiFrutti = false;
         int empezar;
         int terminar = 3000;
+        bool agregandoPalabras = false;
         public Planilla()
         {
             InitializeComponent();
@@ -156,13 +158,32 @@ namespace CPresentacion.Pantallas
                 {
                     terminar--;
                     GestorDeJuegos clogJue = new GestorDeJuegos();
-                    int puntaje = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
-                    MessageBox.Show("Felicitaicones, su puntaje fue: " + puntaje, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RdoRonda resultado = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
+                    GestorDePalabra clogPal = new GestorDePalabra();
+                    resultado.Palabras = resultado.Palabras.Union(resultado.Palabras).ToList();
+                    clogPal.agregarPalabrasDudosas(idJuego, resultado.Palabras);
+                    resultado.Palabras.RemoveAll(pal => pal.Pala.Equals(tbAnimal.Text) || pal.Pala.Equals(tbColor.Text) || pal.Pala.Equals(tbNombre.Text) || pal.Pala.Equals(tbComida.Text) || pal.Pala.Equals(tbLugar.Text) || pal.Pala.Equals(tbObjeto.Text));
+                    MessageBox.Show("Felicitaicones, su puntaje fue: " + resultado.Puntos, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    timer1.Stop();
+                    agregandoPalabras = true;
+                    this.Hide();
+                    AgregarPalabra agregarPalabras = new AgregarPalabra(idJuego, resultado.Palabras);
+                    agregarPalabras.Show(this);
                 }
                 else
                 {
                     terminar--;
                 }
+            }
+        }
+
+        private void Planilla_VisibleChanged(object sender, EventArgs e)
+        {
+            if(this.Visible && agregandoPalabras)
+            {
+                timer1.Start();
+                GestorDePalabra clogPal = new GestorDePalabra();
+                clogPal.limpiarPalabrasDudosas(idJuego);
             }
         }
     }
