@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,16 +14,16 @@ namespace CDatos.ClasesDB
 
         public string obtenerChat(int idJuego)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            MySqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Chat WHERE IdJuego = " + idJuego, con);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Chat WHERE IdJuego = " + idJuego, con);
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
 
                 da.Fill(ds, "Chat");
 
@@ -44,13 +44,13 @@ namespace CDatos.ClasesDB
 
         public void crearChat(int idJuego)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            MySqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 Conexion.conectar(con);
 
-                SqlCommand cmd = new SqlCommand("INSERT INTO Chat VALUES (" + idJuego + ", \"\")", con);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Chat VALUES (" + idJuego + ", \"\")", con);
 
                 cmd.ExecuteNonQuery();
 
@@ -69,13 +69,13 @@ namespace CDatos.ClasesDB
 
         public void actualizarChat(int idJuego, string texto)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            MySqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 Conexion.conectar(con);
 
-                SqlCommand cmd = new SqlCommand("UPDATE Chat SET Texto = \"" + texto + "\" WHERE IdJuego = " + idJuego, con);
+                MySqlCommand cmd = new MySqlCommand("UPDATE Chat SET Texto = \"" + texto + "\" WHERE IdJuego = " + idJuego, con);
 
                 cmd.ExecuteNonQuery();
 

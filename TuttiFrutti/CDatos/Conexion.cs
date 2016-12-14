@@ -1,40 +1,34 @@
 ﻿using CDatos.Properties;
+using MySql.Data.MySqlClient;
 using System;
 using System.Data.OleDb;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
 namespace CDatos
 {
     public class Conexion {
-        public static SqlConnection obtenerConexion()
+        public static MySqlConnection obtenerConexion()
         {
-            SqlConnection sqlConnection = new SqlConnection(CDatos.Properties.Settings.Default.Conexion);
-            return sqlConnection;
+            MySqlConnection MySqlConnection = new MySqlConnection(CDatos.Properties.Settings.Default.Conexion);
+            return MySqlConnection;
         }
 
-        public static void conectar(SqlConnection conn)
+        public static void conectar(MySqlConnection conn)
         {
             try
             {
                 conn.Open();
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                try
-                {
-                    conn.Open();
-                }
-                catch (Exception ex1)
-                {
-                    throw new ExceptionPersonalizada(ex1.Message);
-                }
+                throw new ExceptionPersonalizada(ex.Message);
             }
         }
 
         /*
             CLogica.Conexion cn = new CLogica.Conexion();
-            SqlConnection conn = cn.conectar();
+            MySqlConnection conn = cn.conectar();
             try
             {
                 conn.Open();
