@@ -195,16 +195,15 @@
             // 
             // timer
             // 
-            this.timer.Interval = 1;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // timer1
             // 
-            this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // votacion
             // 
+            this.votacion.Interval = 1000;
             this.votacion.Tick += new System.EventHandler(this.votacion_Tick);
             // 
             // Planilla

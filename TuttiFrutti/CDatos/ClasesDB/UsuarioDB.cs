@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,14 +15,14 @@ namespace CDatos.ClasesDB
         public int getIdUsuario(string nombre)
         {
             DataSet ds = new DataSet();
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("Select Id From Usuario Where NombreUsuario = \"" + nombre + "\"", con);
+                SqlCommand cmd = new SqlCommand("Select Id From Usuario Where NombreUsuario = '" + nombre + "'", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Usuario");
 
@@ -46,11 +46,11 @@ namespace CDatos.ClasesDB
 
         public void cambiarEstado(string usuario, string estado)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
-                MySqlCommand cmd = new MySqlCommand("UPDATE BanderasJuego SET Bandera = \"" + estado + "\" WHERE NombreUsuario = \"" + usuario + "\"", con);
+                SqlCommand cmd = new SqlCommand("UPDATE BanderasJuego SET Bandera = '" + estado + "' WHERE NombreUsuario = '" + usuario + "'", con);
                 cmd.ExecuteNonQuery();
                 con.Dispose();
                 con.Close();
@@ -66,14 +66,14 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoId()
         {
             DataSet ds = new DataSet();
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("Select Max(Id) As M From Usuario", con);
+                SqlCommand cmd = new SqlCommand("Select Max(Id) As M From Usuario", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Usuario");
 
@@ -104,15 +104,15 @@ namespace CDatos.ClasesDB
 
         public void registrarUsuario(string nombre, string contraseña, byte[] imagen)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
                 int ultId = obtenerUltimoId();
 
-                string strConsulta = "INSERT INTO Usuario VALUES (" + ultId + ", \"" + nombre + "\", \"" + contraseña + "\", @Imagen)";
-                MySqlCommand cmd = new MySqlCommand();
+                string strConsulta = "INSERT INTO Usuario VALUES (" + ultId + ", '" + nombre + "', '" + contraseña + "', @Imagen)";
+                SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandText = strConsulta;
                 cmd.Parameters.AddWithValue("@Imagen", imagen);
@@ -144,16 +144,16 @@ namespace CDatos.ClasesDB
         }
         public void iniciarSesion(string nombre, string contraseña)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             DataSet ds = new DataSet();
             try
             {
                 Conexion.conectar(con);
 
-                string strConsulta = "SELECT * FROM Usuario WHERE NombreUsuario = \"" + nombre + "\" AND Contraseña = \"" + contraseña + "\"";
-                MySqlCommand cmd = new MySqlCommand(strConsulta, con);
+                string strConsulta = "SELECT * FROM Usuario WHERE NombreUsuario = '" + nombre + "' AND Contraseña = '" + contraseña + "'";
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Usuario");
 

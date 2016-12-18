@@ -37,6 +37,8 @@ namespace CDatos.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tuttifruttifede.database.windows.net;Initial Catalog=TuttiFruttiDB;Us" +
+            "er ID=FedeA;Password=!daredevils12")]
         public string ConexionOnline {
             get {
                 return ((string)(this["ConexionOnline"]));

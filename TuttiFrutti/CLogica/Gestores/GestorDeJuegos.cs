@@ -173,7 +173,7 @@ namespace CLogica.Gestores
         {
             try
             {
-                string datos = usuario + "\", " + idJuego + ", " + nroRonda + ", \"" + letra + "\", NULL, NULL, NULL, NULL, NULL, NULL, 0, 0)";
+                string datos = usuario + "', " + idJuego + ", " + nroRonda + ", '" + letra + "', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0)";
                 JuegosDB cdatos = new JuegosDB();
                 cdatos.crearRonda(datos);
             }
@@ -186,31 +186,31 @@ namespace CLogica.Gestores
         {
             try
             {
-                //string datos = "Jugador = \"" + usuario + "\",";
+                //string datos = "Jugador = '" + usuario + "',";
                 string datos = "";
                 if(nombre != "")
                 {
-                    datos += "Nombre = \"" + nombre + "\",";
+                    datos += "Nombre = '" + nombre + "',";
                 }
                 if(animal != "")
                 {
-                    datos += "Animal = \"" + animal + "\",";
+                    datos += "Animal = '" + animal + "',";
                 }
                 if (color != "")
                 {
-                    datos += "Color = \"" + color + "\",";
+                    datos += "Color = '" + color + "',";
                 }
                 if (objeto != "")
                 {
-                    datos += "Objeto = \"" + objeto + "\",";
+                    datos += "Objeto = '" + objeto + "',";
                 }
                 if (lugar != "")
                 {
-                    datos += "Lugar = \"" + lugar + "\",";
+                    datos += "Lugar = '" + lugar + "',";
                 }
                 if (comida != "")
                 {
-                    datos += "Comida = \"" + comida + "\",";
+                    datos += "Comida = '" + comida + "',";
                 }
                 if (tuttifrutti)
                 {
@@ -219,7 +219,7 @@ namespace CLogica.Gestores
                 if(datos != "")
                 {
                     datos = datos.Remove(datos.LastIndexOf(','));
-                    string where = "WHERE Jugador = \"" + usuario + "\" AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
+                    string where = "WHERE Jugador = '" + usuario + "' AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
                     JuegosDB cdatos = new JuegosDB();
                     cdatos.cargarRonda(datos, where);
                 }
@@ -339,11 +339,11 @@ namespace CLogica.Gestores
             string where = "WHERE ";
             if(prop != "")
             {
-                where += "U.NombreUsuario LIKE \"" + prop + "%\" AND ";
+                where += "U.NombreUsuario LIKE '" + prop + "%' AND ";
             }
             if(nom != "")
             {
-                where += "J.Nombre LIKE \"" + nom + "%\" AND ";
+                where += "J.Nombre LIKE '" + nom + "%' AND ";
             }
             if (llenas)
             {

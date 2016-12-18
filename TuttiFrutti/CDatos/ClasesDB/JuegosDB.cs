@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,12 +17,12 @@ namespace CDatos.ClasesDB
 
         public void actualizarPuntajeRonda(int idJuego, int nroRonda, string usuario, int puntaje)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("UPDATE Ronda SET Puntos = " + puntaje + " WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
+                SqlCommand cmd = new SqlCommand("UPDATE Ronda SET Puntos = " + puntaje + " WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = '" + usuario + "'", con);
 
                 cmd.ExecuteNonQuery();
 
@@ -40,7 +40,7 @@ namespace CDatos.ClasesDB
 
         public Palabra obtenerPalabrasDudosas(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -55,16 +55,16 @@ namespace CDatos.ClasesDB
                 string where = "";
                 if (categoria.Equals("Objeto"))
                 {
-                    where = "WHERE Palabra = \"" + palabra + "\" AND Letra = \"" + letra + "\"";
+                    where = "WHERE Palabra = '" + palabra + "' AND Letra = '" + letra + "'";
                 }
                 else
                 {
-                    where = "WHERE Palabra = \"" + palabra + "\" AND Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"";
+                    where = "WHERE Palabra = '" + palabra + "' AND Categoria = '" + categoria + "' AND Letra = '" + letra + "'";
                 }
 
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Palabras " + where, con);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Palabras " + where, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -89,7 +89,7 @@ namespace CDatos.ClasesDB
 
         public int obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -101,16 +101,16 @@ namespace CDatos.ClasesDB
                 string where = "";
                 if (categoria.Equals("Objeto"))
                 {
-                    where = "WHERE Palabra = \"" + palabra + "\" AND Letra = \"" + letra + "\"";
+                    where = "WHERE Palabra = '" + palabra + "' AND Letra = '" + letra + "'";
                 }
                 else
                 {
-                    where = "WHERE Palabra = \"" + palabra + "\" AND Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"";
+                    where = "WHERE Palabra = '" + palabra + "' AND Categoria = '" + categoria + "' AND Letra = '" + letra + "'";
                 }
 
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Palabras " + where, con);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Palabras " + where, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -118,9 +118,9 @@ namespace CDatos.ClasesDB
 
                 DataSet ds1 = new DataSet();
 
-                cmd = new MySqlCommand("SELECT * FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND " + categoria + " = \"" + palabra + "\" AND NOT(Jugador = \"" + usuario + "\")", con);
+                cmd = new SqlCommand("SELECT * FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND " + categoria + " = '" + palabra + "' AND NOT(Jugador = '" + usuario + "')", con);
 
-                da = new MySqlDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds1, "Ronda");
 
@@ -153,16 +153,16 @@ namespace CDatos.ClasesDB
 
         public string getUsuarioTuttiFrutti(int idJuego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT U.NombreUsuario FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id WHERE J.Id = " + idJuego, con);
+                SqlCommand cmd = new SqlCommand("SELECT U.NombreUsuario FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id WHERE J.Id = " + idJuego, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -184,7 +184,7 @@ namespace CDatos.ClasesDB
 
         public List<string> obtenerDatosRonda(int idJuego, int nroRonda, string usuario)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -193,9 +193,9 @@ namespace CDatos.ClasesDB
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT Letra, Nombre, Animal, Color, Objeto, Lugar, Comida FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = \"" + usuario + "\"", con);
+                SqlCommand cmd = new SqlCommand("SELECT Letra, Nombre, Animal, Color, Objeto, Lugar, Comida FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda + " AND Jugador = '" + usuario + "'", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -220,16 +220,16 @@ namespace CDatos.ClasesDB
         }
         public int obtenerNroRonda(string usuario, int juego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(nroRonda),0), IF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
+                SqlCommand cmd = new SqlCommand("SELECT IFNULL(MAX(nroRonda),0), IF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -258,7 +258,7 @@ namespace CDatos.ClasesDB
 
         public void crearRonda(string datos)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
@@ -267,9 +267,9 @@ namespace CDatos.ClasesDB
 
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(IdRespuesta),0) FROM Ronda", con);
+                SqlCommand cmd = new SqlCommand("SELECT IFNULL(MAX(IdRespuesta),0) FROM Ronda", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -277,7 +277,7 @@ namespace CDatos.ClasesDB
 
                 int nroRespuesta = (Int32.Parse(ds.Tables[0].Rows[0].ItemArray[0].ToString()) + 1);
 
-                cmd = new MySqlCommand("INSERT INTO Ronda VALUES (" +  nroRespuesta + ",  \"" + datos, con);
+                cmd = new SqlCommand("INSERT INTO Ronda VALUES (" +  nroRespuesta + ",  '" + datos, con);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();
@@ -293,12 +293,12 @@ namespace CDatos.ClasesDB
 
         public void cargarRonda(string datos, string where)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("UPDATE Ronda SET " + datos + " " + where, con);
+                SqlCommand cmd = new SqlCommand("UPDATE Ronda SET " + datos + " " + where, con);
 
                 cmd.ExecuteNonQuery();
 
@@ -315,16 +315,16 @@ namespace CDatos.ClasesDB
 
         public bool todosEsperando(int idJuego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM BanderasJuego WHERE IdJuego = " + idJuego + " AND Bandera = \"Esperando\"", con);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM BanderasJuego WHERE IdJuego = " + idJuego + " AND Bandera = 'Esperando'", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -332,9 +332,9 @@ namespace CDatos.ClasesDB
 
                 DataSet ds1 = new DataSet();
 
-                cmd = new MySqlCommand("SELECT Unidos FROM Juego WHERE Id = " + idJuego, con);
+                cmd = new SqlCommand("SELECT Unidos FROM Juego WHERE Id = " + idJuego, con);
 
-                da = new MySqlDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds1, "Ronda");
 
@@ -356,16 +356,16 @@ namespace CDatos.ClasesDB
 
         public bool hayTuttiFrutti(int juego, int ronda)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
 
             try
             {
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -388,12 +388,12 @@ namespace CDatos.ClasesDB
 
         public void modificarEstado(int idJuego, string estado)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("UPDATE Juego SET Estado = \"" + estado + "\" WHERE Id = " + idJuego, con);
+                SqlCommand cmd = new SqlCommand("UPDATE Juego SET Estado = '" + estado + "' WHERE Id = " + idJuego, con);
 
                 cmd.ExecuteNonQuery();
             }
@@ -407,14 +407,14 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoIDBandera()
         {
             DataSet ds = new DataSet();
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("Select Max(IdBandera) As M From BanderasJuego", con);
+                SqlCommand cmd = new SqlCommand("Select Max(IdBandera) As M From BanderasJuego", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "BanderasJuego");
 
@@ -443,13 +443,13 @@ namespace CDatos.ClasesDB
             }
         }
 
-        public void eliminarBanderas(int idJuego, MySqlConnection con)
+        public void eliminarBanderas(int idJuego, SqlConnection con)
         {
             try
             {
                 string consulta = "DELETE FROM BanderasJuego WHERE IdJuego = " + idJuego;
 
-                MySqlCommand cmd = new MySqlCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
                 cmd.ExecuteNonQuery();
             }
@@ -465,14 +465,14 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoIDJuego()
         {
             DataSet ds = new DataSet();
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("Select Max(Id) As M From Juego", con);
+                SqlCommand cmd = new SqlCommand("Select Max(Id) As M From Juego", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 
@@ -504,7 +504,7 @@ namespace CDatos.ClasesDB
 
         public void agregarSala(string nombre, string usuario, int capacidad)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -515,9 +515,9 @@ namespace CDatos.ClasesDB
 
                 int idUsuario = cdatosU.getIdUsuario(usuario);
 
-                string consulta = "INSERT INTO Juego VALUES (" + idJuego + ", \"" + nombre + "\", " + idUsuario + ", " + capacidad + ", 0, \"Esperando\")";
+                string consulta = "INSERT INTO Juego VALUES (" + idJuego + ", '" + nombre + "', " + idUsuario + ", " + capacidad + ", 0, 'Esperando')";
 
-                MySqlCommand cmd = new MySqlCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
                 cmd.ExecuteNonQuery();
 
@@ -541,7 +541,7 @@ namespace CDatos.ClasesDB
 
         public void eliminarJuego(int idJuego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -550,7 +550,7 @@ namespace CDatos.ClasesDB
 
                 string consulta = "DELETE FROM Juego WHERE Id = " + idJuego;
 
-                MySqlCommand cmd = new MySqlCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
                 cmd.ExecuteNonQuery();
 
@@ -568,16 +568,16 @@ namespace CDatos.ClasesDB
 
         public void unirUsuarioAJuego(int idJuego, string usuario)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                string consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE (NOT(J.Estado = \"Terminado\") AND BJ.NombreUsuario = \"" + usuario + "\" AND NOT(J.Id = " + idJuego + "))";
+                string consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE (NOT(J.Estado = 'Terminado') AND BJ.NombreUsuario = '" + usuario + "' AND NOT(J.Id = " + idJuego + "))";
 
-                MySqlCommand cmd = new MySqlCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 DataSet ds = new DataSet();
 
@@ -586,11 +586,11 @@ namespace CDatos.ClasesDB
                 cmd.ExecuteNonQuery();
 
 
-                consulta = "SELECT * FROM Juego WHERE Estado = \"Esperando\" AND Id = " + idJuego + " AND (Capacidad - Unidos > 0)";
+                consulta = "SELECT * FROM Juego WHERE Estado = 'Esperando' AND Id = " + idJuego + " AND (Capacidad - Unidos > 0)";
 
-                cmd = new MySqlCommand(consulta, con);
+                cmd = new SqlCommand(consulta, con);
 
-                da = new MySqlDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 DataSet ds2 = new DataSet();
 
@@ -599,11 +599,11 @@ namespace CDatos.ClasesDB
                 cmd.ExecuteNonQuery();
 
 
-                consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = \"Jugando\" AND BJ.NombreUsuario = \"" + usuario + "\" AND J.Id = " + idJuego;
+                consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = 'Jugando' AND BJ.NombreUsuario = '" + usuario + "' AND J.Id = " + idJuego;
 
-                cmd = new MySqlCommand(consulta, con);
+                cmd = new SqlCommand(consulta, con);
 
-                da = new MySqlDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 DataSet ds3 = new DataSet();
 
@@ -613,11 +613,11 @@ namespace CDatos.ClasesDB
 
                 //----------------------------------------------------------------------
 
-                consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = \"Esperando\" AND BJ.NombreUsuario = \"" + usuario + "\" AND J.Id = " + idJuego;
+                consulta = "SELECT * FROM BanderasJuego BJ INNER JOIN Juego J ON BJ.IdJuego = J.Id WHERE J.Estado = 'Esperando' AND BJ.NombreUsuario = '" + usuario + "' AND J.Id = " + idJuego;
 
-                cmd = new MySqlCommand(consulta, con);
+                cmd = new SqlCommand(consulta, con);
 
-                da = new MySqlDataAdapter(cmd);
+                da = new SqlDataAdapter(cmd);
 
                 DataSet ds4 = new DataSet();
 
@@ -638,9 +638,9 @@ namespace CDatos.ClasesDB
                     {
                         int idBandera = this.obtenerUltimoIDBandera();
 
-                        consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego + ", \"" + usuario + "\", \"Esperando\")";
+                        consulta = "INSERT INTO BanderasJuego VALUES (" + idBandera + ", " + idJuego + ", '" + usuario + "', 'Esperando')";
 
-                        cmd = new MySqlCommand(consulta, con);
+                        cmd = new SqlCommand(consulta, con);
 
                         cmd.ExecuteNonQuery();
 
@@ -650,9 +650,9 @@ namespace CDatos.ClasesDB
 
                         consulta = "SELECT Unidos FROM Juego WHERE Id = " + idJuego;
 
-                        cmd = new MySqlCommand(consulta, con);
+                        cmd = new SqlCommand(consulta, con);
 
-                        da = new MySqlDataAdapter(cmd);
+                        da = new SqlDataAdapter(cmd);
 
                         da.Fill(ds, "Juego");
 
@@ -662,7 +662,7 @@ namespace CDatos.ClasesDB
 
                         consulta = "UPDATE Juego SET Unidos = ( " + unidos + " + 1) WHERE Id = " + idJuego;
 
-                        cmd = new MySqlCommand(consulta, con);
+                        cmd = new SqlCommand(consulta, con);
 
                         cmd.ExecuteNonQuery();
                     }
@@ -707,7 +707,7 @@ namespace CDatos.ClasesDB
         public DataSet getJuegos(string where)
         {
             DataSet ds = new DataSet();
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -715,16 +715,16 @@ namespace CDatos.ClasesDB
                 string consulta;
                 if (where != "")
                 {
-                    consulta = select + " " + where + " AND NOT(Estado = \"Terminado\") " + orderBy;
+                    consulta = select + " " + where + " AND NOT(Estado = 'Terminado') " + orderBy;
                 }
                 else
                 {
                     consulta = select + " " + orderBy;
                 }
 
-                MySqlCommand cmd = new MySqlCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 
@@ -746,7 +746,7 @@ namespace CDatos.ClasesDB
         public DataSet getBanderas(string where)
         {
             DataSet ds = new DataSet();
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
@@ -765,9 +765,9 @@ namespace CDatos.ClasesDB
                     consulta = select + " " + orderByB;
                 }
 
-                MySqlCommand cmd = new MySqlCommand(consulta, con);
+                SqlCommand cmd = new SqlCommand(consulta, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Juego");
 

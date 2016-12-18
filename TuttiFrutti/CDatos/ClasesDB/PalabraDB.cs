@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace CDatos.ClasesDB
 
         public List<Palabra> obtenerPalabras(char letra)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
 
@@ -23,9 +23,9 @@ namespace CDatos.ClasesDB
 
                 DataSet ds = new DataSet();
 
-                MySqlCommand cmd = new MySqlCommand("SELECT Palabra, Categoria, Letra FROM Palabras WHERE Letra = \"" + letra + "\"", con);
+                SqlCommand cmd = new SqlCommand("SELECT Palabra, Categoria, Letra FROM Palabras WHERE Letra = '" + letra + "'", con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -57,7 +57,7 @@ namespace CDatos.ClasesDB
 
         public List<Palabra> obtenerPalabrasDudosas(int idJuego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
 
@@ -65,9 +65,9 @@ namespace CDatos.ClasesDB
 
                 DataSet ds = new DataSet();
 
-                MySqlCommand cmd = new MySqlCommand("SELECT Palabra, Categoria, Letra FROM PalabrasDudosas WHERE IdJuego = " + idJuego, con);
+                SqlCommand cmd = new SqlCommand("SELECT Palabra, Categoria, Letra FROM PalabrasDudosas WHERE IdJuego = " + idJuego, con);
 
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
                 da.Fill(ds, "Ronda");
 
@@ -99,13 +99,13 @@ namespace CDatos.ClasesDB
 
         public void limpiarPalabrasDudosas(int idJuego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
                 string strConsulta = "DELETE FROM PalabrasDudosas WHERE IdJuego = " + idJuego;
-                MySqlCommand cmd = new MySqlCommand(strConsulta, con);
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();
@@ -121,7 +121,7 @@ namespace CDatos.ClasesDB
         }
         public void agregarVotos(int idJuego, List<Palabra> palabras)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 List<Palabra> palabrasDudosas = this.obtenerPalabrasDudosas(idJuego);
@@ -130,16 +130,16 @@ namespace CDatos.ClasesDB
                 {
                     if (palabras.Contains(pal))
                     {
-                        string strConsulta = "UPDATE PalabrasDudosas SET votos = (SELECT votos FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")) + 1, aprobados = (SELECT aprobados FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")) + 1 WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")";
-                        MySqlCommand cmd = new MySqlCommand(strConsulta, con);
+                        string strConsulta = "UPDATE PalabrasDudosas SET votos = (SELECT votos FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = '" + pal.Pala + "' AND categoria = '" + pal.Categoria + "')) + 1, aprobados = (SELECT aprobados FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = '" + pal.Pala + "' AND categoria = '" + pal.Categoria + "')) + 1 WHERE (idJuego = " + idJuego + " AND palabra = '" + pal.Pala + "' AND categoria = '" + pal.Categoria + "')";
+                        SqlCommand cmd = new SqlCommand(strConsulta, con);
 
                         cmd.ExecuteNonQuery();
 
                     }
                     else
                     {
-                        string strConsulta = "UPDATE PalabrasDudosas SET votos = (SELECT votos FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")) + 1 WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")";
-                        MySqlCommand cmd = new MySqlCommand(strConsulta, con);
+                        string strConsulta = "UPDATE PalabrasDudosas SET votos = (SELECT votos FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = '" + pal.Pala + "' AND categoria = '" + pal.Categoria + "')) + 1 WHERE (idJuego = " + idJuego + " AND palabra = '" + pal.Pala + "' AND categoria = '" + pal.Categoria + "')";
+                        SqlCommand cmd = new SqlCommand(strConsulta, con);
 
                         cmd.ExecuteNonQuery();
                     }
@@ -159,14 +159,14 @@ namespace CDatos.ClasesDB
 
         public List<Palabra> obtenerPalabrasDudosasAprobadas(int idJuego)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
                 string strConsulta = "SELECT Palabra, Categoria, Letra FROM PalabrasDudosas WHERE IdJuego = " + idJuego + " AND Aprobados > ((Votos / 2) + 1)";
-                MySqlCommand cmd = new MySqlCommand(strConsulta, con);
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
 
                 da.Fill(ds, "PalabrasDudosas");
@@ -197,22 +197,22 @@ namespace CDatos.ClasesDB
 
         public void agregarPalabraDudosa(int idJuego, Palabra palabra)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
                 string strConsulta = "SELECT IFNULL(MAX(Id), 0) FROM PalabrasDudosas WHERE IdJuego = " + idJuego;
-                MySqlCommand cmd = new MySqlCommand(strConsulta, con);
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
 
                 da.Fill(ds, "PalabrasDudosas");
 
                 cmd.ExecuteNonQuery();
 
-                strConsulta = "INSERT INTO PalabrasDudosas VALUES (" + (Int32.Parse(ds.Tables[0].Rows[0].ItemArray[0].ToString()) + 1) + ", " + idJuego +", \"" + palabra.Pala + "\", \"" + palabra.Categoria + "\", \"" + palabra.Letra + "\", 0, 0)";
-                cmd = new MySqlCommand(strConsulta, con);
+                strConsulta = "INSERT INTO PalabrasDudosas VALUES (" + (Int32.Parse(ds.Tables[0].Rows[0].ItemArray[0].ToString()) + 1) + ", " + idJuego +", '" + palabra.Pala + "', '" + palabra.Categoria + "', '" + palabra.Letra + "', 0, 0)";
+                cmd = new SqlCommand(strConsulta, con);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();
@@ -228,13 +228,13 @@ namespace CDatos.ClasesDB
 
         public void agregarPalabra(string palabra, char letra, string categoria)
         {
-            MySqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexion();
             try
             {
                 Conexion.conectar(con);
 
-                string strConsulta = "INSERT INTO Palabras VALUES (\"" + palabra + "\", \"" + categoria + "\", \"" + letra + "\")";
-                MySqlCommand cmd = new MySqlCommand(strConsulta, con);
+                string strConsulta = "INSERT INTO Palabras VALUES ('" + palabra + "', '" + categoria + "', '" + letra + "')";
+                SqlCommand cmd = new SqlCommand(strConsulta, con);
 
                 cmd.ExecuteNonQuery();
                 con.Dispose();
