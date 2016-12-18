@@ -11,6 +11,36 @@ namespace CLogica.Gestores
     public class GestorDePalabra
     {
 
+        public void agregarPalabrasCorrectas(int idJuego)
+        {
+            try
+            {
+                List<Palabra> lp = this.obtenerPalabrasDudosasAprobadas(idJuego);
+                foreach(Palabra pal in lp)
+                {
+                    this.agregarPalabra(pal.Pala, pal.Letra, pal.Categoria);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<Palabra> obtenerPalabrasDudosasAprobadas(int idJuego)
+        {
+            try
+            {
+                PalabraDB cdatos = new PalabraDB();
+                return cdatos.obtenerPalabrasDudosasAprobadas(idJuego);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
         public void agregarPalabrasDudosas(int idJuego, List<Palabra> palabras)
         {
             try

@@ -42,17 +42,24 @@ namespace CPresentacion.Pantallas
 
         private void btnAgregarPalabras_Click(object sender, EventArgs e)
         {
-            GestorDePalabra clogPal = new GestorDePalabra();
-            List<Palabra> palabrasSeleccionadas = new List<Palabra>();
-            foreach(DataRow fila in dgvPalabrasDudosas.SelectedRows)
+            try
             {
-                Palabra palabra = palabras.First<Palabra>(pal => pal.Pala.Equals(fila.ItemArray[0]) && pal.Categoria.Equals(fila.ItemArray[1]));
-                if(palabra != null)
+                GestorDePalabra clogPal = new GestorDePalabra();
+                List<Palabra> palabrasSeleccionadas = new List<Palabra>();
+                foreach (DataRow fila in dgvPalabrasDudosas.SelectedRows)
                 {
-                    palabrasSeleccionadas.Add(palabra);
+                    Palabra palabra = palabras.First<Palabra>(pal => pal.Pala.Equals(fila.ItemArray[0]) && pal.Categoria.Equals(fila.ItemArray[1]));
+                    if (palabra != null)
+                    {
+                        palabrasSeleccionadas.Add(palabra);
+                    }
                 }
+                clogPal.agregarVotos(idJuego, palabrasSeleccionadas);
             }
-            clogPal.agregarVotos(idJuego, palabrasSeleccionadas);
+            catch (Exception ex)
+            {
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -82,15 +82,7 @@ namespace CPresentacion.Pantallas
                         tbComida.Enabled = false;
                         tbLugar.Enabled = false;
                         tbObjeto.Enabled = false;
-                        if (!tuttiFrutti)
-                        {
-                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, false);
-                            nroRonda++;
-                        }
-                        else
-                        {
-                            tuttiFrutti = false;
-                        }
+                        clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, false);
                     }
                 }
                 else
@@ -124,7 +116,7 @@ namespace CPresentacion.Pantallas
                     timer.Enabled = false;
                     terminar = 300;
                     timer1.Enabled = true;
-                    clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, true);
+                    //clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, true);
                     tuttiFrutti = true;
                     btnTuttiFrutti.Enabled = false;
                     tbNombre.Enabled = false;
@@ -157,18 +149,43 @@ namespace CPresentacion.Pantallas
                 if (terminar == 200)
                 {
                     terminar--;
-                    GestorDeJuegos clogJue = new GestorDeJuegos();
-                    RdoRonda resultado = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
-                    GestorDePalabra clogPal = new GestorDePalabra();
-                    resultado.Palabras = resultado.Palabras.Union(resultado.Palabras).ToList();
-                    clogPal.agregarPalabrasDudosas(idJuego, resultado.Palabras);
-                    resultado.Palabras.RemoveAll(pal => pal.Pala.Equals(tbAnimal.Text) || pal.Pala.Equals(tbColor.Text) || pal.Pala.Equals(tbNombre.Text) || pal.Pala.Equals(tbComida.Text) || pal.Pala.Equals(tbLugar.Text) || pal.Pala.Equals(tbObjeto.Text));
-                    MessageBox.Show("Felicitaicones, su puntaje fue: " + resultado.Puntos, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    timer1.Stop();
-                    agregandoPalabras = true;
-                    this.Hide();
-                    AgregarPalabra agregarPalabras = new AgregarPalabra(idJuego, resultado.Palabras);
-                    agregarPalabras.Show(this);
+                    try
+                    {
+                        GestorDeJuegos clogJue = new GestorDeJuegos();
+                        List<Palabra> palabrasDudosas = clogJue.obtenerPalabrasDudosas(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
+                        GestorDePalabra clogPal = new GestorDePalabra();
+                        List<Palabra> lp = new List<Palabra>();
+                        foreach (Palabra pal in palabrasDudosas)
+                        {
+                            if (lp.All(p => p.Pala != pal.Pala || p.Categoria != pal.Categoria))
+                            {
+                                lp.Add(pal);
+                            }
+                        }
+                        palabrasDudosas = lp;
+                        clogPal.agregarPalabrasDudosas(idJuego, palabrasDudosas);
+                        palabrasDudosas.RemoveAll(pal => (pal.Pala.Equals(tbAnimal.Text) && pal.Categoria.Equals("Animal")) || (pal.Pala.Equals(tbColor.Text) && pal.Categoria.Equals("Color")) || (pal.Pala.Equals(tbNombre.Text) && pal.Categoria.Equals("Nombre")) || (pal.Pala.Equals(tbComida.Text) && pal.Categoria.Equals("Comida")) || (pal.Pala.Equals(tbLugar.Text) && pal.Categoria.Equals("Lugar")) || (pal.Pala.Equals(tbObjeto.Text) && pal.Categoria.Equals("Objeto")));
+                        GestorDeUsuario clogUs = new GestorDeUsuario();
+                        timer1.Stop();
+                        if (palabrasDudosas.Count > 0)
+                        {
+                            clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Votando");
+                            agregandoPalabras = true;
+                            this.Hide();
+                            AgregarPalabra agregarPalabras = new AgregarPalabra(idJuego, palabrasDudosas);
+                            agregarPalabras.Show(this);
+                        }
+                        else
+                        {
+                            clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
+                        }
+                        votacion.Enabled = true;
+                        votacion.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
@@ -179,11 +196,67 @@ namespace CPresentacion.Pantallas
 
         private void Planilla_VisibleChanged(object sender, EventArgs e)
         {
-            if(this.Visible && agregandoPalabras)
+            try
             {
-                timer1.Start();
-                GestorDePalabra clogPal = new GestorDePalabra();
-                clogPal.limpiarPalabrasDudosas(idJuego);
+                if (this.Visible && agregandoPalabras)
+                {
+                    GestorDeUsuario clogUs = new GestorDeUsuario();
+                    clogUs.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Esperando");
+                }
+            }
+            catch (Exception ex){
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void votacion_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                GestorDeJuegos clogJue = new GestorDeJuegos();
+                if (clogJue.todosEsperando(idJuego))
+                {
+                    GestorDePalabra clogPal = new GestorDePalabra();
+                    clogPal.agregarPalabrasCorrectas(idJuego);
+                    List<Palabra> palabras = new List<Palabra>();
+                    palabras.Add(new Palabra { Pala = tbNombre.Text, Categoria = "Nombre", Letra = (lblLetra.Text)[0] });
+                    palabras.Add(new Palabra { Pala = tbAnimal.Text, Categoria = "Animal", Letra = (lblLetra.Text)[0] });
+                    palabras.Add(new Palabra { Pala = tbColor.Text, Categoria = "Color", Letra = (lblLetra.Text)[0] });
+                    palabras.Add(new Palabra { Pala = tbComida.Text, Categoria = "Comida", Letra = (lblLetra.Text)[0] });
+                    palabras.Add(new Palabra { Pala = tbLugar.Text, Categoria = "Lugar", Letra = (lblLetra.Text)[0] });
+                    palabras.Add(new Palabra { Pala = tbObjeto.Text, Categoria = "Objeto", Letra = (lblLetra.Text)[0] });
+                    votacion.Stop();
+                    if (tuttiFrutti)
+                    {
+                        if (palabras.All(pal => palabras.Where(pal2 => pal2.Pala.Equals(pal.Pala)).Count() == 1))
+                        {
+                            if (clogJue.tuttifruttiCorrecto(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado(), (lblLetra.Text)[0], palabras))
+                            {
+                                timer1.Start();
+                                clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tuttiFrutti);
+                                int puntaje = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
+                                MessageBox.Show("Felicitaicones, su puntaje fue: " + puntaje, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                clogPal.limpiarPalabrasDudosas(idJuego);
+                            }
+                            else
+                            {
+                                timer.Enabled = true;
+                                empezar = 0;
+                                btnTuttiFrutti.Enabled = true;
+                                tbNombre.Enabled = true;
+                                tbAnimal.Enabled = true;
+                                tbColor.Enabled = true;
+                                tbComida.Enabled = true;
+                                tbLugar.Enabled = true;
+                                tbObjeto.Enabled = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

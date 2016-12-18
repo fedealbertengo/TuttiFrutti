@@ -38,17 +38,62 @@ namespace CDatos.ClasesDB
 
         }
 
-        public RdoPalabra obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
+        public Palabra obtenerPalabrasDudosas(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
         {
             MySqlConnection con = Conexion.obtenerConexion();
 
             try
             {
-                RdoPalabra rdo = new RdoPalabra();
-                rdo.Puntos = 10;
                 Palabra pal = new Palabra();
                 pal.Pala = "";
-                rdo.Palabra = pal;
+                pal.Letra = letra;
+                pal.Categoria = categoria;
+
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                string where = "";
+                if (categoria.Equals("Objeto"))
+                {
+                    where = "WHERE Palabra = \"" + palabra + "\" AND Letra = \"" + letra + "\"";
+                }
+                else
+                {
+                    where = "WHERE Palabra = \"" + palabra + "\" AND Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"";
+                }
+
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Palabras " + where, con);
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    pal.Pala = palabra;
+                }
+                return pal;
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public int obtenerPuntosPalabra(int idJuego, int nroRonda, string usuario, char letra, string palabra, string categoria)
+        {
+            MySqlConnection con = Conexion.obtenerConexion();
+
+            try
+            {
+                int puntos = 10;
 
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
@@ -81,38 +126,22 @@ namespace CDatos.ClasesDB
 
                 cmd.ExecuteNonQuery();
 
-                /*
-                DataSet ds2 = new DataSet();
-
-                cmd = new MySqlCommand("SELECT * FROM Palabras WHERE Categoria = \"" + categoria + "\" AND Letra = \"" + letra + "\"", con);
-
-                da = new MySqlDataAdapter(cmd);
-
-                da.Fill(ds2, "Ronda");
-
-                cmd.ExecuteNonQuery();
-                */
                 con.Dispose();
                 con.Close();
 
-                if(ds.Tables[0].Rows.Count == 0/* && ds2.Tables[0].Rows.Count > 0*/)
+                if(ds.Tables[0].Rows.Count == 0)
                 {
-                    pal = new Palabra();
-                    pal.Pala = palabra;
-                    pal.Categoria = categoria;
-                    pal.Letra = letra;
-                    rdo.Palabra = pal;
-                    rdo.Puntos = 0;
+                    puntos = 0;
                 }
                 else
                 {
                     if (ds1.Tables[0].Rows.Count > 0)
                     {
-                        rdo.Puntos = 5;
+                        puntos = 5;
                     }
                 }
 
-                return rdo;
+                return puntos;
             }
             catch (Exception ex)
             {
@@ -120,6 +149,37 @@ namespace CDatos.ClasesDB
                 con.Close();
                 throw new ExceptionPersonalizada(ex.Message);
             }
+        }
+
+        public string getUsuarioTuttiFrutti(int idJuego)
+        {
+            MySqlConnection con = Conexion.obtenerConexion();
+
+            try
+            {
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                MySqlCommand cmd = new MySqlCommand("SELECT U.NombreUsuario FROM Juego J INNER JOIN Usuario U ON J.IdPropietario = U.Id WHERE J.Id = " + idJuego, con);
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                return ds.Tables[0].Rows[0].ItemArray[0].ToString();
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+
         }
 
         public List<string> obtenerDatosRonda(int idJuego, int nroRonda, string usuario)
@@ -244,6 +304,47 @@ namespace CDatos.ClasesDB
 
                 con.Dispose();
                 con.Close();
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public bool todosEsperando(int idJuego)
+        {
+            MySqlConnection con = Conexion.obtenerConexion();
+
+            try
+            {
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM BanderasJuego WHERE IdJuego = " + idJuego + " AND Bandera = \"Esperando\"", con);
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                DataSet ds1 = new DataSet();
+
+                cmd = new MySqlCommand("SELECT Unidos FROM Juego WHERE Id = " + idJuego, con);
+
+                da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds1, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+
+                con.Dispose();
+                con.Close();
+
+                return (ds.Tables[0].Rows.Count == (int)ds1.Tables[0].Rows[0].ItemArray[0]);
             }
             catch (Exception ex)
             {

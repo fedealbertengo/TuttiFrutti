@@ -46,6 +46,7 @@
             this.tbNombre = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.votacion = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -202,6 +203,10 @@
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // votacion
+            // 
+            this.votacion.Tick += new System.EventHandler(this.votacion_Tick);
+            // 
             // Planilla
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -240,5 +245,6 @@
         private System.Windows.Forms.TextBox tbNombre;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer votacion;
     }
 }

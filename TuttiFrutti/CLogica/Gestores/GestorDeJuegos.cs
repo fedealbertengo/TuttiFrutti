@@ -13,14 +13,114 @@ namespace CLogica.Gestores
     public class GestorDeJuegos
     {
 
-        public RdoRonda calcularPuntaje(int idJuego, int nroRonda, string usuario)
+        public bool tuttifruttiCorrecto(int idJuego, int idRonda, string usuario, char letra, List<Palabra> lp)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                PalabraDB cdatosPal = new PalabraDB();
+                List<Palabra> palabras = cdatosPal.obtenerPalabras(letra);
+                bool encontrado = false;
+                bool correcto = true;
+                foreach (Palabra pal in lp)
+                {
+                    foreach (Palabra p in palabras)
+                    {
+                        if (pal.Categoria.Equals("Objeto"))
+                        {
+                            encontrado = (pal.Pala.ToUpper().Equals(p.Pala.ToUpper()) && Char.ToUpper(pal.Letra) == Char.ToUpper(p.Letra));
+                        }
+                        else
+                        {
+                            encontrado = (pal.Pala.ToUpper().Equals(p.Pala.ToUpper()) && pal.Categoria.ToUpper().Equals(p.Categoria.ToUpper()) && Char.ToUpper(pal.Letra) == Char.ToUpper(p.Letra));
+                        }
+                        if (encontrado)
+                        {
+                            break;
+                        }
+                    }
+                    correcto = encontrado;
+                    if (!correcto)
+                    {
+                        break;
+                    }
+                }
+                return correcto;
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+
+        }
+
+        public bool todosEsperando(int idJuego)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                return cdatos.todosEsperando(idJuego);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public List<Palabra> obtenerPalabrasDudosas(int idJuego, int nroRonda, string usuario)
         {
             try
             {
                 JuegosDB cdatos = new JuegosDB();
                 List<string> ronda = cdatos.obtenerDatosRonda(idJuego, nroRonda, usuario);
                 char letra = ronda[0][0];
-                RdoRonda rdo = new RdoRonda();
+                List<Palabra> lp = new List<Palabra>();
+                for (int i = 1; i < ronda.Count(); i++)
+                {
+                    string categoria = "";
+                    switch (i)
+                    {
+                        case 1:
+                            categoria = "Nombre";
+                            break;
+                        case 2:
+                            categoria = "Animal";
+                            break;
+                        case 3:
+                            categoria = "Color";
+                            break;
+                        case 4:
+                            categoria = "Objeto";
+                            break;
+                        case 5:
+                            categoria = "Lugar";
+                            break;
+                        case 6:
+                            categoria = "Comida";
+                            break;
+                    }
+                    Palabra pal = cdatos.obtenerPalabrasDudosas(idJuego, nroRonda, usuario, letra, ronda[i], categoria);
+                    if(pal.Pala != "")
+                    {
+                        lp.Add(pal);
+                    }
+                }
+                return lp;
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public int calcularPuntaje(int idJuego, int nroRonda, string usuario)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                List<string> ronda = cdatos.obtenerDatosRonda(idJuego, nroRonda, usuario);
+                char letra = ronda[0][0];
+                int puntaje = 0;
                 for(int i = 1; i<ronda.Count(); i++)
                 {
                     string categoria = "";
@@ -45,15 +145,11 @@ namespace CLogica.Gestores
                             categoria = "Comida";
                             break;
                     }
-                    RdoPalabra resultado = cdatos.obtenerPuntosPalabra(idJuego, nroRonda, usuario, letra, ronda[i], categoria);
-                    rdo.Puntos += resultado.Puntos;
-                    if(!resultado.Palabra.Equals(""))
-                    {
-                        rdo.Palabras.Add(resultado.Palabra);
-                    }
+                    int puntos = cdatos.obtenerPuntosPalabra(idJuego, nroRonda, usuario, letra, ronda[i], categoria);
+                    puntaje += puntos;
                 }
-                cdatos.actualizarPuntajeRonda(idJuego, nroRonda, usuario, rdo.Puntos);
-                return rdo;
+                cdatos.actualizarPuntajeRonda(idJuego, nroRonda, usuario, puntaje);
+                return puntaje;
             }
             catch (Exception ex)
             {
