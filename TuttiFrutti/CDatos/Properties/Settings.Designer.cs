@@ -28,9 +28,18 @@ namespace CDatos.Properties {
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;user id=Pinii;password=hola12;persistsecurityinfo=True;database=" +
             "tuttifrutti")]
-        public string Conexion {
+        public string ConexionLocal {
             get {
-                return ((string)(this["Conexion"]));
+                return ((string)(this["ConexionLocal"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        public string ConexionOnline {
+            get {
+                return ((string)(this["ConexionOnline"]));
             }
         }
     }

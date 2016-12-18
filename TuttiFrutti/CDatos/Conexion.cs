@@ -9,7 +9,7 @@ namespace CDatos
     public class Conexion {
         public static MySqlConnection obtenerConexion()
         {
-            MySqlConnection MySqlConnection = new MySqlConnection(CDatos.Properties.Settings.Default.Conexion);
+            MySqlConnection MySqlConnection = new MySqlConnection(CDatos.Properties.Settings.Default.ConexionLocal);
             return MySqlConnection;
         }
 
