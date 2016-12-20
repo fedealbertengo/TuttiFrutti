@@ -266,6 +266,8 @@ namespace CDatos.MySQL
 
                 Conexion.conectar(con);
 
+                datos = datos.Replace('\'', '\"');
+
                 MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(IdRespuesta),0) FROM Ronda", con);
 
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
@@ -296,6 +298,8 @@ namespace CDatos.MySQL
             try
             {
                 Conexion.conectar(con);
+
+                datos = datos.Replace('\'', '\"');
 
                 MySqlCommand cmd = new MySqlCommand("UPDATE Ronda SET " + datos + " " + where, con);
 

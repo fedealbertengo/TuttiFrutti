@@ -408,7 +408,7 @@ namespace CPresentacion.Pantallas
                 GestorDeSala clogSal = new GestorDeSala();
                 try
                 {
-                    clogSal.actualizarChat(idJuego, tbChat.Text + GestorDeUsuario.getUsuarioLogeado() + ":" + tbMensaje.Text + '\r' + '\n');
+                    clogSal.actualizarChat(idJuego, tbChat.Text + GestorDeUsuario.getUsuarioLogeado() + ": " + tbMensaje.Text + '\r' + '\n');
                     tbMensaje.Text = "";
                 }
                 catch (Exception ex)

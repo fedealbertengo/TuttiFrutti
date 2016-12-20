@@ -205,6 +205,7 @@
             // 
             // votacion
             // 
+            this.votacion.Interval = 1;
             this.votacion.Tick += new System.EventHandler(this.votacion_Tick);
             // 
             // Planilla

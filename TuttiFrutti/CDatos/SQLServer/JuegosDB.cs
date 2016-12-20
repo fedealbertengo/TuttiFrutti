@@ -267,6 +267,8 @@ namespace CDatos.SQLServer
 
                 Conexion.conectar(con);
 
+                datos = datos.Replace('\'', '\"');
+
                 SqlCommand cmd = new SqlCommand("SELECT IFNULL(MAX(IdRespuesta),0) FROM Ronda", con);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -297,6 +299,8 @@ namespace CDatos.SQLServer
             try
             {
                 Conexion.conectar(con);
+
+                datos = datos.Replace('\'', '\"');
 
                 SqlCommand cmd = new SqlCommand("UPDATE Ronda SET " + datos + " " + where, con);
 

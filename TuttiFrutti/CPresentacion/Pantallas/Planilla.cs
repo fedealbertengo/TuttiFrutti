@@ -251,6 +251,18 @@ namespace CPresentacion.Pantallas
                                 tbObjeto.Enabled = true;
                             }
                         }
+                        else
+                        {
+                            timer.Enabled = true;
+                            empezar = 0;
+                            btnTuttiFrutti.Enabled = true;
+                            tbNombre.Enabled = true;
+                            tbAnimal.Enabled = true;
+                            tbColor.Enabled = true;
+                            tbComida.Enabled = true;
+                            tbLugar.Enabled = true;
+                            tbObjeto.Enabled = true;
+                        }
                     }
                 }
             }
