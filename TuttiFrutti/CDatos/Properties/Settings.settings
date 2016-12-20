@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CDatos.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ConexionLocal" Type="(Connection string)" Scope="Application">
+    <Setting Name="ConexionMySQL" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;ConnectionString&gt;server=localhost;user id=Pinii;password=hola12;persistsecurityinfo=True;database=tuttifrutti&lt;/ConnectionString&gt;
@@ -10,7 +10,7 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">server=localhost;user id=Pinii;password=hola12;persistsecurityinfo=True;database=tuttifrutti</Value>
     </Setting>
-    <Setting Name="ConexionOnline" Type="(Connection string)" Scope="Application">
+    <Setting Name="ConexionSQLServer" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;ConnectionString&gt;Data Source=tuttifruttifede.database.windows.net;Initial Catalog=TuttiFruttiDB;User ID=FedeA;Password=!daredevils12&lt;/ConnectionString&gt;

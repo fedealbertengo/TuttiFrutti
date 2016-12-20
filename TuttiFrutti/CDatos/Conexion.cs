@@ -2,15 +2,21 @@
 using System.Data.SqlClient;
 using System;
 using System.Data.OleDb;
-using System.Data.SqlClient;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace CDatos
 {
     public class Conexion {
-        public static SqlConnection obtenerConexion()
+        public static SqlConnection obtenerConexionSQLServer()
         {
-            SqlConnection SqlConnection = new SqlConnection(CDatos.Properties.Settings.Default.ConexionOnline);
+            SqlConnection SqlConnection = new SqlConnection(CDatos.Properties.Settings.Default.ConexionSQLServer);
+            return SqlConnection;
+        }
+
+        public static MySqlConnection obtenerConexionMySQL()
+        {
+            MySqlConnection SqlConnection = new MySqlConnection(CDatos.Properties.Settings.Default.ConexionMySQL);
             return SqlConnection;
         }
 
@@ -20,36 +26,29 @@ namespace CDatos
             {
                 conn.Open();
             }
-            catch(Exception ex)
-            {
-                throw new ExceptionPersonalizada(ex.Message);
-            }
-        }
-
-        /*
-            CLogica.Conexion cn = new CLogica.Conexion();
-            SqlConnection conn = cn.conectar();
-            try
-            {
-                conn.Open();
-                MessageBox.Show("Conecto");
-                conn.Dispose();
-                conn.Close();
-            }
-            catch(Exception ex)
+            catch(Exception)
             {
                 try
                 {
                     conn.Open();
-                    MessageBox.Show("Conecto");
-                    conn.Dispose();
-                    conn.Close();
                 }
-                catch (Exception ex1)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Ha ocurrido un problema:\n" + ex1);
+                    throw new ExceptionPersonalizada(ex.Message);
                 }
             }
-        */
+        }
+
+        public static void conectar(MySqlConnection conn)
+        {
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
     }
 }

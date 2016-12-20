@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CDatos.ClasesDB
+namespace CDatos.SQLServer
 {
     public class UsuarioDB
     {
@@ -15,7 +15,7 @@ namespace CDatos.ClasesDB
         public int getIdUsuario(string nombre)
         {
             DataSet ds = new DataSet();
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
             try
             {
                 Conexion.conectar(con);
@@ -46,7 +46,7 @@ namespace CDatos.ClasesDB
 
         public void cambiarEstado(string usuario, string estado)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
             try
             {
                 Conexion.conectar(con);
@@ -66,7 +66,7 @@ namespace CDatos.ClasesDB
         public int obtenerUltimoId()
         {
             DataSet ds = new DataSet();
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
             try
             {
                 Conexion.conectar(con);
@@ -104,7 +104,7 @@ namespace CDatos.ClasesDB
 
         public void registrarUsuario(string nombre, string contraseña, byte[] imagen)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
             try
             {
                 Conexion.conectar(con);
@@ -144,7 +144,7 @@ namespace CDatos.ClasesDB
         }
         public void iniciarSesion(string nombre, string contraseña)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
             DataSet ds = new DataSet();
             try
             {

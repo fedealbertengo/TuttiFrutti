@@ -51,10 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClasesDB\JuegosDB.cs" />
-    <Compile Include="ClasesDB\PalabraDB.cs" />
-    <Compile Include="ClasesDB\SalaDB.cs" />
-    <Compile Include="ClasesDB\UsuarioDB.cs" />
+    <Compile Include="MySQL\JuegosDB.cs" />
+    <Compile Include="MySQL\PalabraDB.cs" />
+    <Compile Include="MySQL\SalaDB.cs" />
+    <Compile Include="MySQL\UsuarioDB.cs" />
+    <Compile Include="SQLServer\JuegosDB.cs" />
+    <Compile Include="SQLServer\PalabraDB.cs" />
+    <Compile Include="SQLServer\SalaDB.cs" />
+    <Compile Include="SQLServer\UsuarioDB.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="ExceptionPersonalizada.cs" />
     <Compile Include="Program.cs" />

@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CDatos.ClasesDB
+namespace CDatos.SQLServer
 {
     public class SalaDB
     {
 
         public string obtenerChat(int idJuego)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
 
             try
             {
@@ -44,7 +44,7 @@ namespace CDatos.ClasesDB
 
         public void crearChat(int idJuego)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
 
             try
             {
@@ -69,7 +69,7 @@ namespace CDatos.ClasesDB
 
         public void actualizarChat(int idJuego, string texto)
         {
-            SqlConnection con = Conexion.obtenerConexion();
+            SqlConnection con = Conexion.obtenerConexionSQLServer();
 
             try
             {

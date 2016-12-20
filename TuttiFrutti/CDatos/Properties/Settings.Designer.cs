@@ -28,9 +28,9 @@ namespace CDatos.Properties {
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;user id=Pinii;password=hola12;persistsecurityinfo=True;database=" +
             "tuttifrutti")]
-        public string ConexionLocal {
+        public string ConexionMySQL {
             get {
-                return ((string)(this["ConexionLocal"]));
+                return ((string)(this["ConexionMySQL"]));
             }
         }
         
@@ -39,9 +39,9 @@ namespace CDatos.Properties {
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tuttifruttifede.database.windows.net;Initial Catalog=TuttiFruttiDB;Us" +
             "er ID=FedeA;Password=!daredevils12")]
-        public string ConexionOnline {
+        public string ConexionSQLServer {
             get {
-                return ((string)(this["ConexionOnline"]));
+                return ((string)(this["ConexionSQLServer"]));
             }
         }
     }
