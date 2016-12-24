@@ -156,6 +156,21 @@ namespace CLogica.Gestores
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
+
+        public char obtenerLetraRonda(int idJuego, int nroRonda)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                return cdatos.obtenerLetraRonda(idJuego, nroRonda);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+
+        }
+
         public int obtenerNroRonda(string usuario, int idJuego)
         {
             try

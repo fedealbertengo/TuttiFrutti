@@ -43,10 +43,13 @@ namespace CPresentacion.Pantallas
             GestorDeJuegos clogJue = new GestorDeJuegos();
             try
             {
+                /*
                 Random rnd = new Random();
                 char letra = (char)((rnd.Next() % 26) + 65);
-                lblLetra.Text = letra.ToString();
+                */
                 nroRonda = clogJue.obtenerNroRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego);
+                char letra = clogJue.obtenerLetraRonda(idJuego, nroRonda);
+                lblLetra.Text = letra.ToString();
                 clogJue.crearRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0]);
                 btnTuttiFrutti.Enabled = false;
                 tbNombre.Enabled = false;

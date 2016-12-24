@@ -217,6 +217,48 @@ namespace CDatos.MySQL
                 throw new ExceptionPersonalizada(ex.Message);
             }
         }
+
+        public char obtenerLetraRonda(int idJuego, int nroRonda)
+        {
+            MySqlConnection con = Conexion.obtenerConexionMySQL();
+
+            try
+            {
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                MySqlCommand cmd = new MySqlCommand("SELECT Letra FROM Ronda WHERE IdJuego = " + idJuego + " AND NroRonda = " + nroRonda, con);
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+                char letra;
+                if (ds.Tables[0].Rows.Count == 1)
+                {
+                    letra = ds.Tables[0].Rows[0].ItemArray[0].ToString()[0];
+                }
+                else
+                {
+                    Random rnd = new Random();
+                    letra = (char)((rnd.Next() % 26) + 65);
+                }
+
+                con.Dispose();
+                con.Close();
+                return letra;
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+
+        }
+
         public int obtenerNroRonda(string usuario, int juego)
         {
             MySqlConnection con = Conexion.obtenerConexionMySQL();
