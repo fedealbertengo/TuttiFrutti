@@ -20,7 +20,7 @@ namespace CPresentacion.Pantallas
         public int nroRonda;
         public bool tuttiFrutti = false;
         int empezar;
-        int terminar = 3000;
+        int terminar = 3;
         bool agregandoPalabras = false;
         public Planilla()
         {
@@ -55,7 +55,7 @@ namespace CPresentacion.Pantallas
                 tbComida.Enabled = false;
                 tbLugar.Enabled = false;
                 tbObjeto.Enabled = false;
-                empezar = 300;
+                empezar = 3;
                 timer.Enabled = true;
             }
             catch(Exception ex){
@@ -73,7 +73,7 @@ namespace CPresentacion.Pantallas
                     if (clogJue.hayTuttiFrutti(idJuego, nroRonda))
                     {
                         timer.Enabled = false;
-                        terminar = 300;
+                        terminar = 3;
                         timer1.Enabled = true;
                         btnTuttiFrutti.Enabled = false;
                         tbNombre.Enabled = false;
@@ -114,7 +114,7 @@ namespace CPresentacion.Pantallas
                 if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbComida.Text != "")
                 {
                     timer.Enabled = false;
-                    terminar = 300;
+                    terminar = 3;
                     timer1.Enabled = true;
                     //clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, true);
                     tuttiFrutti = true;
@@ -146,7 +146,7 @@ namespace CPresentacion.Pantallas
             }
             else
             {
-                if (terminar == 200)
+                if (terminar == 2)
                 {
                     terminar--;
                     try

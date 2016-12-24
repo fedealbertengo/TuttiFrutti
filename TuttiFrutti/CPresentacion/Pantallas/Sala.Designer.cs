@@ -41,7 +41,6 @@
             // pnFotoUs1
             // 
             this.pnFotoUs1.BackColor = System.Drawing.Color.Black;
-            this.pnFotoUs1.BackgroundImage = global::CPresentacion.Properties.Resources.Foto1;
             this.pnFotoUs1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnFotoUs1.ForeColor = System.Drawing.Color.Red;
             this.pnFotoUs1.Location = new System.Drawing.Point(5, 5);
@@ -64,7 +63,6 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 5000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // botonUniversal
