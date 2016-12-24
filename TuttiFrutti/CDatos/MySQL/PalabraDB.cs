@@ -163,7 +163,7 @@ namespace CDatos.MySQL
             {
                 Conexion.conectar(con);
 
-                string strConsulta = "SELECT Palabra, Categoria, Letra FROM PalabrasDudosas WHERE IdJuego = " + idJuego + " AND Aprobados = Votos)";
+                string strConsulta = "SELECT Palabra, Categoria, Letra FROM PalabrasDudosas WHERE IdJuego = " + idJuego + " AND Aprobados = Votos";
                 MySqlCommand cmd = new MySqlCommand(strConsulta, con);
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
