@@ -302,9 +302,13 @@ namespace CPresentacion.Pantallas
                     }
                     else
                     {
-                        if (panUs.BackColor == Color.Red && estado.Equals("Listo"))
+                        if (estado.Equals("Listo"))
                         {
                             panUs.BackColor = Color.Green;
+                            if (usuario.Equals(juego.Rows[0].ItemArray[2]))
+                            {
+                                empezar = true;
+                            }
                         }
                     }
                 }
