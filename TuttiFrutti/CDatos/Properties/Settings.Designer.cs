@@ -26,8 +26,8 @@ namespace CDatos.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;user id=Pinii;password=hola12;persistsecurityinfo=True;database=" +
-            "tuttifrutti")]
+        [global::System.Configuration.DefaultSettingValueAttribute("server=DESKTOP-61FRCKC;user id=Usuario;password=hola12;persistsecurityinfo=True;d" +
+            "atabase=tuttifrutti")]
         public string ConexionMySQL {
             get {
                 return ((string)(this["ConexionMySQL"]));
