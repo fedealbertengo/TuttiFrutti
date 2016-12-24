@@ -113,6 +113,7 @@ namespace CPresentacion.Pantallas
             {
                 if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbComida.Text != "")
                 {
+                    clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", true);
                     timer.Enabled = false;
                     terminar = 3;
                     timer1.Enabled = true;
@@ -240,6 +241,7 @@ namespace CPresentacion.Pantallas
                             }
                             else
                             {
+                                clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", false);
                                 timer.Enabled = true;
                                 empezar = 0;
                                 btnTuttiFrutti.Enabled = true;
@@ -253,6 +255,7 @@ namespace CPresentacion.Pantallas
                         }
                         else
                         {
+                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", false);
                             timer.Enabled = true;
                             empezar = 0;
                             btnTuttiFrutti.Enabled = true;
