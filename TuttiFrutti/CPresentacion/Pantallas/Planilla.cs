@@ -43,14 +43,14 @@ namespace CPresentacion.Pantallas
             GestorDeJuegos clogJue = new GestorDeJuegos();
             try
             {
-                /*
-                Random rnd = new Random();
-                char letra = (char)((rnd.Next() % 26) + 65);
-                */
+                DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
                 nroRonda = clogJue.obtenerNroRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego);
                 char letra = clogJue.obtenerLetraRonda(idJuego, nroRonda);
                 lblLetra.Text = letra.ToString();
-                clogJue.crearRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0]);
+                if (!GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
+                {
+                    clogJue.crearRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0]);
+                }
                 btnTuttiFrutti.Enabled = false;
                 tbNombre.Enabled = false;
                 tbAnimal.Enabled = false;
@@ -60,8 +60,9 @@ namespace CPresentacion.Pantallas
                 tbObjeto.Enabled = false;
                 empezar = 3;
                 timer.Enabled = true;
+
             }
-            catch(Exception ex){
+            catch (Exception ex){
                 MessageBox.Show(("Se ha producido un error:\n" + ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

@@ -331,6 +331,13 @@ namespace CPresentacion.Pantallas
                 if (empezar && listo)
                 {
                     GestorDeJuegos clogJue = new GestorDeJuegos();
+                    DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
+                    if (GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
+                    {
+                        int nroRonda = clogJue.obtenerNroRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego);
+                        char letra = clogJue.obtenerLetraRonda(idJuego, nroRonda);
+                        clogJue.crearRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, letra);
+                    }
                     clogJue.modificarEstado(idJuego, "Jugando");
                     Planilla planilla = new Planilla(idJuego);
                     this.Hide();
