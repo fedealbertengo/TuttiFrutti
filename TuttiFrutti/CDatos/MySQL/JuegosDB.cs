@@ -268,7 +268,7 @@ namespace CDatos.MySQL
                 DataSet ds = new DataSet();
                 Conexion.conectar(con);
 
-                MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(nroRonda),0), IF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
+                MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(MAX(nroRonda),0), IF(EXISTS(SELECT * FROM Ronda WHERE IdJuego = " + juego + " AND nroRonda = (SELECT IFNULL(MAX(nroRonda),0) FROM Ronda) AND TuttiFrutti = 1),1,0) FROM Ronda WHERE IdJuego = " + juego, con);
 
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
 
@@ -277,7 +277,8 @@ namespace CDatos.MySQL
                 cmd.ExecuteNonQuery();
 
                 int nroRonda;
-                if (Int32.Parse(ds.Tables[0].Rows[0].ItemArray[1].ToString()) == 1) {
+                if (Int32.Parse(ds.Tables[0].Rows[0].ItemArray[1].ToString()) == 1)
+                {
                     nroRonda = (Int32.Parse(ds.Tables[0].Rows[0].ItemArray[0].ToString()) + 1);
                 }
                 else

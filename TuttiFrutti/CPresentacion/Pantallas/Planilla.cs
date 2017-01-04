@@ -169,6 +169,7 @@ namespace CPresentacion.Pantallas
                         }
                         palabrasDudosas = lp;
                         clogPal.agregarPalabrasDudosas(idJuego, palabrasDudosas);
+                        palabrasDudosas = clogPal.obtenerPalabrasDudosas(idJuego);
                         palabrasDudosas.RemoveAll(pal => (pal.Pala.Equals(tbAnimal.Text) && pal.Categoria.Equals("Animal")) || (pal.Pala.Equals(tbColor.Text) && pal.Categoria.Equals("Color")) || (pal.Pala.Equals(tbNombre.Text) && pal.Categoria.Equals("Nombre")) || (pal.Pala.Equals(tbComida.Text) && pal.Categoria.Equals("Comida")) || (pal.Pala.Equals(tbLugar.Text) && pal.Categoria.Equals("Lugar")) || (pal.Pala.Equals(tbObjeto.Text) && pal.Categoria.Equals("Objeto")));
                         GestorDeUsuario clogUs = new GestorDeUsuario();
                         timer1.Stop();
@@ -222,7 +223,11 @@ namespace CPresentacion.Pantallas
                 if (clogJue.todosEsperando(idJuego))
                 {
                     GestorDePalabra clogPal = new GestorDePalabra();
-                    clogPal.agregarPalabrasCorrectas(idJuego);
+                    DataTable juego = clogJue.getJuegos(idJuego).Tables[0];
+                    if (!GestorDeUsuario.getUsuarioLogeado().Equals(juego.Rows[0].ItemArray[2]))
+                    {
+                        clogPal.agregarPalabrasCorrectas(idJuego);
+                    }
                     List<Palabra> palabras = new List<Palabra>();
                     palabras.Add(new Palabra { Pala = tbNombre.Text, Categoria = "Nombre", Letra = (lblLetra.Text)[0] });
                     palabras.Add(new Palabra { Pala = tbAnimal.Text, Categoria = "Animal", Letra = (lblLetra.Text)[0] });
