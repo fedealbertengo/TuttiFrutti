@@ -123,13 +123,14 @@ namespace CDatos.MySQL
             MySqlConnection con = Conexion.obtenerConexionMySQL();
             try
             {
+                Conexion.conectar(con);
                 List<Palabra> palabrasDudosas = this.obtenerPalabrasDudosas(idJuego);
 
                 foreach (Palabra pal in palabrasDudosas)
                 {
-                    if (palabras.Contains(pal))
+                    if (palabras.Any(pala => pal.Pala.Equals(pal.Pala) && pal.Categoria.Equals(pal.Categoria)))
                     {
-                        string strConsulta = "UPDATE PalabrasDudosas SET votos = (SELECT votos FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")) + 1, aprobados = (SELECT aprobados FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")) + 1 WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")";
+                        string strConsulta = "UPDATE PalabrasDudosas SET votos = votos + 1, aprobados = aprobados + 1 WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")";
                         MySqlCommand cmd = new MySqlCommand(strConsulta, con);
 
                         cmd.ExecuteNonQuery();

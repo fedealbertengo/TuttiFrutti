@@ -46,15 +46,16 @@ namespace CPresentacion.Pantallas
             {
                 GestorDePalabra clogPal = new GestorDePalabra();
                 List<Palabra> palabrasSeleccionadas = new List<Palabra>();
-                foreach (DataRow fila in dgvPalabrasDudosas.SelectedRows)
+                foreach (DataGridViewRow fila in dgvPalabrasDudosas.SelectedRows)
                 {
-                    Palabra palabra = palabras.First<Palabra>(pal => pal.Pala.Equals(fila.ItemArray[0]) && pal.Categoria.Equals(fila.ItemArray[1]));
+                    Palabra palabra = palabras.First<Palabra>(pal => pal.Pala.Equals(fila.Cells[0].Value) && pal.Categoria.Equals(fila.Cells[1].Value));
                     if (palabra != null)
                     {
                         palabrasSeleccionadas.Add(palabra);
                     }
                 }
                 clogPal.agregarVotos(idJuego, palabrasSeleccionadas);
+                this.Close();
             }
             catch (Exception ex)
             {

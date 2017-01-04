@@ -118,6 +118,7 @@ namespace CPresentacion.Pantallas
                 if (tbNombre.Text != "" && tbAnimal.Text != "" && tbColor.Text != "" && tbObjeto.Text != "" && tbLugar.Text != "" && tbComida.Text != "")
                 {
                     clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", true);
+                    this.agregarPalabrasDudosas();
                     timer.Enabled = false;
                     terminar = 3;
                     timer1.Enabled = true;
@@ -142,6 +143,31 @@ namespace CPresentacion.Pantallas
             }
         }
 
+        private void agregarPalabrasDudosas()
+        {
+            GestorDeJuegos clogJue = new GestorDeJuegos();
+            List<Palabra> palabrasDudosas = clogJue.obtenerPalabrasDudosas(idJuego);
+            GestorDePalabra clogPal = new GestorDePalabra();
+            List<Palabra> lp = new List<Palabra>();
+            List<Palabra> palabrasRonda = new List<Palabra>();
+            palabrasRonda.Add(new Palabra { Pala = tbNombre.Text, Categoria = "Nombre", Letra = (lblLetra.Text)[0] });
+            palabrasRonda.Add(new Palabra { Pala = tbAnimal.Text, Categoria = "Animal", Letra = (lblLetra.Text)[0] });
+            palabrasRonda.Add(new Palabra { Pala = tbColor.Text, Categoria = "Color", Letra = (lblLetra.Text)[0] });
+            palabrasRonda.Add(new Palabra { Pala = tbComida.Text, Categoria = "Comida", Letra = (lblLetra.Text)[0] });
+            palabrasRonda.Add(new Palabra { Pala = tbLugar.Text, Categoria = "Lugar", Letra = (lblLetra.Text)[0] });
+            palabrasRonda.Add(new Palabra { Pala = tbObjeto.Text, Categoria = "Objeto", Letra = (lblLetra.Text)[0] });
+            List<Palabra> palabrasDudosasRonda = clogJue.obtenerPalabrasDudosas(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado(), palabrasRonda);
+            foreach (Palabra pal in palabrasDudosasRonda)
+            {
+                if (lp.All(p => p.Pala != pal.Pala || p.Categoria != pal.Categoria))
+                {
+                    lp.Add(pal);
+                }
+            }
+            palabrasDudosas = lp;
+            clogPal.agregarPalabrasDudosas(idJuego, palabrasDudosas);
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (terminar == 0)
@@ -156,20 +182,12 @@ namespace CPresentacion.Pantallas
                     terminar--;
                     try
                     {
-                        GestorDeJuegos clogJue = new GestorDeJuegos();
-                        List<Palabra> palabrasDudosas = clogJue.obtenerPalabrasDudosas(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
-                        GestorDePalabra clogPal = new GestorDePalabra();
-                        List<Palabra> lp = new List<Palabra>();
-                        foreach (Palabra pal in palabrasDudosas)
+                        if (!tuttiFrutti)
                         {
-                            if (lp.All(p => p.Pala != pal.Pala || p.Categoria != pal.Categoria))
-                            {
-                                lp.Add(pal);
-                            }
+                            this.agregarPalabrasDudosas();
                         }
-                        palabrasDudosas = lp;
-                        clogPal.agregarPalabrasDudosas(idJuego, palabrasDudosas);
-                        palabrasDudosas = clogPal.obtenerPalabrasDudosas(idJuego);
+                        GestorDePalabra clogPal = new GestorDePalabra();
+                        List<Palabra> palabrasDudosas = clogPal.obtenerPalabrasDudosas(idJuego);
                         palabrasDudosas.RemoveAll(pal => (pal.Pala.Equals(tbAnimal.Text) && pal.Categoria.Equals("Animal")) || (pal.Pala.Equals(tbColor.Text) && pal.Categoria.Equals("Color")) || (pal.Pala.Equals(tbNombre.Text) && pal.Categoria.Equals("Nombre")) || (pal.Pala.Equals(tbComida.Text) && pal.Categoria.Equals("Comida")) || (pal.Pala.Equals(tbLugar.Text) && pal.Categoria.Equals("Lugar")) || (pal.Pala.Equals(tbObjeto.Text) && pal.Categoria.Equals("Objeto")));
                         GestorDeUsuario clogUs = new GestorDeUsuario();
                         timer1.Stop();
@@ -260,6 +278,7 @@ namespace CPresentacion.Pantallas
                                 tbComida.Enabled = true;
                                 tbLugar.Enabled = true;
                                 tbObjeto.Enabled = true;
+                                clogPal.limpiarPalabrasDudosas(idJuego);
                             }
                         }
                         else
@@ -274,6 +293,7 @@ namespace CPresentacion.Pantallas
                             tbComida.Enabled = true;
                             tbLugar.Enabled = true;
                             tbObjeto.Enabled = true;
+                            clogPal.limpiarPalabrasDudosas(idJuego);
                         }
                     }
                 }

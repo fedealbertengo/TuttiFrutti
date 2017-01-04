@@ -67,6 +67,34 @@ namespace CLogica.Gestores
             }
         }
 
+        public List<Palabra> obtenerPalabrasDudosas(int idJuego, int nroRonda, string usuario, List<Palabra> palabras)
+        {
+            List<Palabra> lp = new List<Palabra>();
+            JuegosDB cdatos = new JuegosDB();
+            foreach (Palabra pal in palabras)
+            {
+                Palabra palabra = cdatos.obtenerPalabrasDudosas(idJuego, nroRonda, usuario, pal.Letra, pal.Pala, pal.Categoria);
+                if (palabra.Pala != "")
+                {
+                    lp.Add(palabra);
+                }
+            }
+            return lp;
+        }
+
+        public List<Palabra> obtenerPalabrasDudosas(int idJuego)
+        {
+            try
+            {
+                PalabraDB cdatos = new PalabraDB();
+                return cdatos.obtenerPalabrasDudosas(idJuego);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
         public List<Palabra> obtenerPalabrasDudosas(int idJuego, int nroRonda, string usuario)
         {
             try
