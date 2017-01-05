@@ -11,6 +11,32 @@ namespace CLogica.Gestores
     {
         public static string usuarioLogeado;
 
+        public bool algunoEstadoReiniciar(int idJuego)
+        {
+            UsuarioDB cdatos = new UsuarioDB();
+            try
+            {
+                return cdatos.algunoEstadoReiniciar(idJuego);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+        public string obtnerEstadoJugador(string usuario)
+        {
+            UsuarioDB cdatos = new UsuarioDB();
+            try
+            {
+                return cdatos.obtnerEstadoJugador(usuario);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
         public static string getUsuarioLogeado()
         {
             return usuarioLogeado;

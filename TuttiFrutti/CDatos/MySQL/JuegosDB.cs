@@ -400,6 +400,38 @@ namespace CDatos.MySQL
             }
         }
 
+        public string obtenerJugadorTuttiFrutti(int juego, int ronda)
+        {
+            MySqlConnection con = Conexion.obtenerConexionMySQL();
+
+            try
+            {
+                DataSet ds = new DataSet();
+                Conexion.conectar(con);
+
+                MySqlCommand cmd = new MySqlCommand("SELECT Jugador FROM Ronda WHERE IdJuego = " + juego + " AND NroRonda = " + ronda + " AND TuttiFrutti = 1", con);
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Ronda");
+
+                cmd.ExecuteNonQuery();
+
+
+                con.Dispose();
+                con.Close();
+
+                return (ds.Tables[0].Rows[0].ItemArray[0].ToString());
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
+
         public bool hayTuttiFrutti(int juego, int ronda)
         {
             MySqlConnection con = Conexion.obtenerConexionMySQL();

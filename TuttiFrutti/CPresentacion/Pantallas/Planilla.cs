@@ -74,6 +74,8 @@ namespace CPresentacion.Pantallas
             {
                 if (empezar == 0)
                 {
+                    GestorDeUsuario clogUsu = new GestorDeUsuario();
+                    clogUsu.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Jugando");
                     if (clogJue.hayTuttiFrutti(idJuego, nroRonda))
                     {
                         timer.Enabled = false;
@@ -87,6 +89,7 @@ namespace CPresentacion.Pantallas
                         tbLugar.Enabled = false;
                         tbObjeto.Enabled = false;
                         clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, false);
+                        timer.Enabled = false;
                     }
                 }
                 else
@@ -260,17 +263,22 @@ namespace CPresentacion.Pantallas
                         {
                             if (clogJue.tuttifruttiCorrecto(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado(), (lblLetra.Text)[0], palabras))
                             {
+                                GestorDeUsuario clogUsu = new GestorDeUsuario();
                                 timer1.Start();
                                 clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tuttiFrutti);
                                 int puntaje = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
                                 MessageBox.Show("Felicitaicones, su puntaje fue: " + puntaje, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 clogPal.limpiarPalabrasDudosas(idJuego);
+                                clogUsu.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Terminado");
                             }
                             else
                             {
+                                GestorDeUsuario clogUsu = new GestorDeUsuario();
+                                clogUsu.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Reiniciar");
                                 clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", false);
+                                votacion.Enabled = false;
                                 timer.Enabled = true;
-                                empezar = 0;
+                                empezar = 3;
                                 btnTuttiFrutti.Enabled = true;
                                 tbNombre.Enabled = true;
                                 tbAnimal.Enabled = true;
@@ -283,7 +291,42 @@ namespace CPresentacion.Pantallas
                         }
                         else
                         {
+                            GestorDeUsuario clogUsu = new GestorDeUsuario();
+                            clogUsu.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Reiniciar");
                             clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", false);
+                            votacion.Enabled = false;
+                            timer.Enabled = true;
+                            empezar = 3;
+                            btnTuttiFrutti.Enabled = true;
+                            tbNombre.Enabled = true;
+                            tbAnimal.Enabled = true;
+                            tbColor.Enabled = true;
+                            tbComida.Enabled = true;
+                            tbLugar.Enabled = true;
+                            tbObjeto.Enabled = true;
+                            clogPal.limpiarPalabrasDudosas(idJuego);
+                        }
+                    }
+                }
+                else
+                {
+                    GestorDeUsuario clogUsu = new GestorDeUsuario();
+                    if (clogUsu.algunoEstadoReiniciar(idJuego))
+                    {
+                        GestorDePalabra clogPal = new GestorDePalabra();
+                        if (clogJue.hayTuttiFrutti(idJuego, nroRonda))
+                        {
+                            timer1.Start();
+                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], tbNombre.Text, tbAnimal.Text, tbColor.Text, tbObjeto.Text, tbLugar.Text, tbComida.Text, tuttiFrutti);
+                            int puntaje = clogJue.calcularPuntaje(idJuego, nroRonda, GestorDeUsuario.getUsuarioLogeado());
+                            MessageBox.Show("Felicitaicones, su puntaje fue: " + puntaje, "Ronda completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            clogUsu.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Terminado");
+                        }
+                        else
+                        {
+                            clogUsu.cambiarEstado(GestorDeUsuario.getUsuarioLogeado(), "Reiniciar");
+                            clogJue.cargarRonda(GestorDeUsuario.getUsuarioLogeado(), idJuego, nroRonda, lblLetra.Text[0], "", "", "", "", "", "", false);
+                            votacion.Enabled = false;
                             timer.Enabled = true;
                             empezar = 0;
                             btnTuttiFrutti.Enabled = true;

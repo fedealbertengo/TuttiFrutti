@@ -12,6 +12,36 @@ namespace CDatos.MySQL
     public class UsuarioDB
     {
 
+        public bool algunoEstadoReiniciar(int idJuego)
+        {
+            MySqlConnection con = Conexion.obtenerConexionMySQL();
+            try
+            {
+                Conexion.conectar(con);
+                MySqlCommand cmd = new MySqlCommand("SELECT Bandera FROM BanderasJuego WHERE Bandera = \"Reiniciar\" AND IdJuego = " + idJuego, con);
+                cmd.ExecuteNonQuery();
+
+                DataSet ds = new DataSet();
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Bandera");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                return (ds.Tables[0].Rows.Count > 0);
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
+
         public int getIdUsuario(string nombre)
         {
             DataSet ds = new DataSet();
@@ -43,6 +73,36 @@ namespace CDatos.MySQL
             }
         }
 
+
+        public string obtnerEstadoJugador(string usuario)
+        {
+            MySqlConnection con = Conexion.obtenerConexionMySQL();
+            try
+            {
+                Conexion.conectar(con);
+                MySqlCommand cmd = new MySqlCommand("SELECT Bandera FROM BanderasJuego WHERE NombreUsuario = '" + usuario + "'", con);
+                cmd.ExecuteNonQuery();
+
+                DataSet ds = new DataSet();
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                da.Fill(ds, "Bandera");
+
+                cmd.ExecuteNonQuery();
+
+                con.Dispose();
+                con.Close();
+
+                return (ds.Tables[0].Rows[0].ItemArray[0].ToString());
+            }
+            catch (Exception ex)
+            {
+                con.Dispose();
+                con.Close();
+                throw new ExceptionPersonalizada(ex.Message);
+            }
+        }
 
         public void cambiarEstado(string usuario, string estado)
         {

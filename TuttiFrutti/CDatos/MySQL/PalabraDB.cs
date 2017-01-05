@@ -138,7 +138,7 @@ namespace CDatos.MySQL
                     }
                     else
                     {
-                        string strConsulta = "UPDATE PalabrasDudosas SET votos = (SELECT votos FROM PalabrasDudosas WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")) + 1 WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")";
+                        string strConsulta = "UPDATE PalabrasDudosas SET votos = votos = votos + 1 WHERE (idJuego = " + idJuego + " AND palabra = \"" + pal.Pala + "\" AND categoria = \"" + pal.Categoria + "\")";
                         MySqlCommand cmd = new MySqlCommand(strConsulta, con);
 
                         cmd.ExecuteNonQuery();

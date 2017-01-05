@@ -231,47 +231,43 @@ namespace CLogica.Gestores
             {
                 //string datos = "Jugador = '" + usuario + "',";
                 string datos = "";
-                if(nombre != "")
-                {
-                    datos += "Nombre = '" + nombre + "',";
-                }
-                if(animal != "")
-                {
-                    datos += "Animal = '" + animal + "',";
-                }
-                if (color != "")
-                {
-                    datos += "Color = '" + color + "',";
-                }
-                if (objeto != "")
-                {
-                    datos += "Objeto = '" + objeto + "',";
-                }
-                if (lugar != "")
-                {
-                    datos += "Lugar = '" + lugar + "',";
-                }
-                if (comida != "")
-                {
-                    datos += "Comida = '" + comida + "',";
-                }
+                datos += "Nombre = '" + nombre + "',";
+                datos += "Animal = '" + animal + "',";
+                datos += "Color = '" + color + "',";
+                datos += "Objeto = '" + objeto + "',";
+                datos += "Lugar = '" + lugar + "',";
+                datos += "Comida = '" + comida + "',";
                 if (tuttifrutti)
                 {
                     datos += "TuttiFrutti = 1,";
                 }
-                if(datos != "")
+                else
                 {
-                    datos = datos.Remove(datos.LastIndexOf(','));
-                    string where = "WHERE Jugador = '" + usuario + "' AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
-                    JuegosDB cdatos = new JuegosDB();
-                    cdatos.cargarRonda(datos, where);
+                    datos += "TuttiFrutti = 0,";
                 }
+                datos = datos.Remove(datos.LastIndexOf(','));
+                string where = "WHERE Jugador = '" + usuario + "' AND IdJuego = " + idJuego + " AND NroRonda = " + nroRonda;
+                JuegosDB cdatos = new JuegosDB();
+                cdatos.cargarRonda(datos, where);
             }
             catch (Exception ex)
             {
                 throw new ExceptionPersonalizada(ex.Message);
             }
 
+        }
+
+        public string obtenerJugadorTuttiFrutti(int juego, int ronda)
+        {
+            try
+            {
+                JuegosDB cdatos = new JuegosDB();
+                return cdatos.obtenerJugadorTuttiFrutti(juego, ronda);
+            }
+            catch (Exception ex)
+            {
+                throw new ExceptionPersonalizada(ex.Message);
+            }
         }
 
         public bool hayTuttiFrutti(int juego, int ronda)
